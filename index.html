@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EFI Calculator — Endometriosis Fertility Index</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f6f9;
+    color: #1e293b;
+    line-height: 1.6;
+    padding: 1rem;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: .25rem;
+    color: #7c3aed;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: .95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Score Banner */
+  .score-banner {
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: sticky;
+    top: .5rem;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(124,58,237,.3);
+  }
+  .score-banner .score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .score-banner .score-label {
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    opacity: .85;
+  }
+  .score-banner .score-detail {
+    font-size: .9rem;
+    margin-top: .5rem;
+    opacity: .9;
+  }
+  .score-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: .75rem;
+    font-size: .85rem;
+    opacity: .8;
+  }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: .75rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .card h2 {
+    font-size: 1.15rem;
+    color: #7c3aed;
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 2px solid #ede9fe;
+  }
+
+  /* Form Groups */
+  .field { margin-bottom: 1.25rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    font-weight: 600;
+    font-size: .95rem;
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .radio-group { display: flex; flex-direction: column; gap: .4rem; }
+  .radio-option {
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    padding: .55rem .75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .radio-option:hover { border-color: #c4b5fd; background: #faf5ff; }
+  .radio-option.selected {
+    border-color: #7c3aed;
+    background: #f5f3ff;
+  }
+  .radio-option input[type="radio"] {
+    margin-top: .2rem;
+    accent-color: #7c3aed;
+    flex-shrink: 0;
+  }
+  .radio-option .option-text { font-size: .9rem; }
+  .radio-option .option-pts {
+    margin-left: auto;
+    font-weight: 700;
+    color: #7c3aed;
+    font-size: .85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Results Table */
+  .results-table { width: 100%; border-collapse: collapse; margin-top: .75rem; }
+  .results-table th {
+    background: #f1f5f9;
+    padding: .6rem .75rem;
+    text-align: left;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #64748b;
+  }
+  .results-table td {
+    padding: .6rem .75rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: .9rem;
+  }
+  .results-table tr.highlighted {
+    background: #f5f3ff;
+    font-weight: 600;
+  }
+  .results-table tr.highlighted td {
+    color: #7c3aed;
+    border-bottom-color: #ddd6fe;
+  }
+
+  /* Explanation */
+  .explanation {
+    background: #f5f3ff;
+    border-left: 4px solid #7c3aed;
+    padding: 1rem 1.25rem;
+    border-radius: 0 .5rem .5rem 0;
+    margin-top: 1rem;
+    font-size: .9rem;
+    color: #4c1d95;
+  }
+
+  /* Footer */
+  .credit {
+    text-align: center;
+    font-size: .78rem;
+    color: #94a3b8;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  @media (max-width: 480px) {
+    .score-banner .score-value { font-size: 2.5rem; }
+    .card { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>EFI Calculator</h1>
+  <p class="subtitle">Endometriosis Fertility Index</p>
+
+  <!-- Score Banner -->
+  <div class="score-banner">
+    <div class="score-label">EFI Score</div>
+    <div class="score-value" id="totalScore">—</div>
+    <div class="score-breakdown">
+      <span>Historical: <strong id="histScore">—</strong>/5</span>
+      <span>Surgical: <strong id="surgScore">—</strong>/5</span>
+    </div>
+    <div class="score-detail" id="scoreDetail">Select all factors below to calculate your score.</div>
+  </div>
+
+  <!-- Historical Factors -->
+  <div class="card">
+    <h2>Section 1: Historical Factors</h2>
+
+    <div class="field">
+      <span class="field-label">Age at Time of Surgery</span>
+      <div class="radio-group" id="ageGroup">
+        <label class="radio-option">
+          <input type="radio" name="age" value="2">
+          <span class="option-text">≤ 35 years</span>
+          <span class="option-pts">+2</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="age" value="1">
+          <span class="option-text">36–39 years</span>
+          <span class="option-pts">+1</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="age" value="0">
+          <span class="option-text">≥ 40 years</span>
+          <span class="option-pts">+0</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Years of Infertility</span>
+      <div class="radio-group" id="inferGroup">
+        <label class="radio-option">
+          <input type="radio" name="infertility" value="2">
+          <span class="option-text">≤ 3 years</span>
+          <span class="option-pts">+2</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="infertility" value="0">
+          <span class="option-text">&gt; 3 years</span>
+          <span class="option-pts">+0</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Prior Pregnancy</span>
+      <div class="radio-group" id="pregGroup">
+        <label class="radio-option">
+          <input type="radio" name="pregnancy" value="1">
+          <span class="option-text">Yes</span>
+          <span class="option-pts">+1</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="pregnancy" value="0">
+          <span class="option-text">No</span>
+          <span class="option-pts">+0</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Surgical Factors -->
+  <div class="card">
+    <h2>Section 2: Surgical Factors</h2>
+
+    <div class="field">
+      <span class="field-label">Surgical Findings &amp; Outcome</span>
+      <div class="radio-group" id="surgGroup">
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="5">
+          <span class="option-text">Mild endometriosis, healthy tubes, no adhesions</span>
+          <span class="option-pts">+5</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="4">
+          <span class="option-text">Moderate endometriosis, healthy tubes, all endo &amp; adhesions removed</span>
+          <span class="option-pts">+4</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="3">
+          <span class="option-text">Moderate endometriosis, mildly damaged tubes, all endo &amp; adhesions removed</span>
+          <span class="option-pts">+3</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="2">
+          <span class="option-text">Severe endometriosis, healthy tubes, no large endometriomas, all adhesions removed</span>
+          <span class="option-pts">+2</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="1">
+          <span class="option-text">Severe endometriosis, large endometriomas, mildly damaged tubes, most adhesions removed</span>
+          <span class="option-pts">+1</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="surgical" value="0">
+          <span class="option-text">Severe endometriosis, severe tubal damage, large endometriomas, many adhesions remaining</span>
+          <span class="option-pts">+0</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card">
+    <h2>Estimated Pregnancy Rates</h2>
+    <table class="results-table">
+      <thead>
+        <tr><th>EFI Score</th><th>Pregnant at 1 Year</th><th>Pregnant at 3 Years</th></tr>
+      </thead>
+      <tbody id="resultsBody">
+        <tr data-range="9-10"><td>9–10</td><td>67%</td><td>75%</td></tr>
+        <tr data-range="7-8"><td>7–8</td><td>39%</td><td>66%</td></tr>
+        <tr data-range="6"><td>6</td><td>30%</td><td>54%</td></tr>
+        <tr data-range="5"><td>5</td><td>27%</td><td>42%</td></tr>
+        <tr data-range="4"><td>4</td><td>15%</td><td>28%</td></tr>
+        <tr data-range="0-3"><td>0–3</td><td>10%</td><td>10%</td></tr>
+      </tbody>
+    </table>
+    <div class="explanation" id="explanation">
+      Complete the selections above to see your estimated pregnancy rates based on the EFI scoring system.
+    </div>
+  </div>
+
+  <p class="credit">
+    Based on Adamson GD &amp; Pasta DJ. <em>Fertil Steril</em> 2010;94(5):1609–15.<br>
+    This tool is for informational purposes only and does not constitute medical advice.
+  </p>
+</div>
+
+<script>
+(function() {
+  const rateTable = [
+    { min: 9, max: 10, range: '9-10', y1: '67%', y3: '75%' },
+    { min: 7, max: 8,  range: '7-8',  y1: '39%', y3: '66%' },
+    { min: 6, max: 6,  range: '6',    y1: '30%', y3: '54%' },
+    { min: 5, max: 5,  range: '5',    y1: '27%', y3: '42%' },
+    { min: 4, max: 4,  range: '4',    y1: '15%', y3: '28%' },
+    { min: 0, max: 3,  range: '0-3',  y1: '10%', y3: '10%' }
+  ];
+
+  function getSelected(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? parseInt(el.value, 10) : null;
+  }
+
+  function getRate(score) {
+    return rateTable.find(r => score >= r.min && score <= r.max);
+  }
+
+  function update() {
+    const age = getSelected('age');
+    const inf = getSelected('infertility');
+    const preg = getSelected('pregnancy');
+    const surg = getSelected('surgical');
+
+    const histParts = [age, inf, preg];
+    const histComplete = histParts.every(v => v !== null);
+    const surgComplete = surg !== null;
+    const histTotal = histComplete ? histParts.reduce((a, b) => a + b, 0) : null;
+
+    document.getElementById('histScore').textContent = histTotal !== null ? histTotal : '—';
+    document.getElementById('surgScore').textContent = surgComplete ? surg : '—';
+
+    // Highlight selected options
+    document.querySelectorAll('.radio-option').forEach(label => {
+      const input = label.querySelector('input');
+      label.classList.toggle('selected', input.checked);
+    });
+
+    // Highlight results table
+    document.querySelectorAll('#resultsBody tr').forEach(tr => tr.classList.remove('highlighted'));
+
+    if (histComplete && surgComplete) {
+      const total = histTotal + surg;
+      document.getElementById('totalScore').textContent = total + '/10';
+      const rate = getRate(total);
+
+      if (rate) {
+        const row = document.querySelector(`tr[data-range="${rate.range}"]`);
+        if (row) row.classList.add('highlighted');
+
+        document.getElementById('scoreDetail').textContent =
+          `${rate.y1} chance of pregnancy at 1 year · ${rate.y3} at 3 years`;
+
+        let meaning;
+        if (total >= 9) meaning = 'An excellent prognosis — most patients in this range achieve pregnancy without IVF.';
+        else if (total >= 7) meaning = 'A good prognosis — natural conception or less invasive treatments may be effective.';
+        else if (total >= 5) meaning = 'A moderate prognosis — consider discussing both natural attempts and assisted reproduction with your provider.';
+        else if (total >= 4) meaning = 'A lower prognosis — assisted reproductive technologies such as IVF may improve outcomes.';
+        else meaning = 'A more challenging prognosis — IVF is typically recommended to maximize chances of pregnancy.';
+
+        document.getElementById('explanation').innerHTML =
+          `<strong>Your EFI score is ${total}/10.</strong> ${meaning} Estimated pregnancy rate is <strong>${rate.y1}</strong> at 1 year and <strong>${rate.y3}</strong> at 3 years after surgical treatment.`;
+      }
+    } else {
+      document.getElementById('totalScore').textContent = '—';
+      document.getElementById('scoreDetail').textContent = 'Select all factors below to calculate your score.';
+      document.getElementById('explanation').textContent =
+        'Complete the selections above to see your estimated pregnancy rates based on the EFI scoring system.';
+    }
+  }
+
+  document.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.addEventListener('change', update);
+  });
+})();
+</script>
+</body>
+</html>
