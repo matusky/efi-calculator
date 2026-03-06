@@ -5,393 +5,593 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EFI Calculator — Endometriosis Fertility Index</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: #f4f6f9;
-    color: #1e293b;
-    line-height: 1.6;
-    padding: 1rem;
-  }
-  .container { max-width: 720px; margin: 0 auto; }
-  h1 {
-    text-align: center;
-    font-size: 1.75rem;
-    margin-bottom: .25rem;
-    color: #7c3aed;
-  }
-  .subtitle {
-    text-align: center;
-    color: #64748b;
-    font-size: .95rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Score Banner */
-  .score-banner {
-    background: linear-gradient(135deg, #7c3aed, #a78bfa);
-    color: #fff;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    position: sticky;
-    top: .5rem;
-    z-index: 10;
-    box-shadow: 0 4px 20px rgba(124,58,237,.3);
-  }
-  .score-banner .score-value {
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-  .score-banner .score-label {
-    font-size: .85rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    opacity: .85;
-  }
-  .score-banner .score-detail {
-    font-size: .9rem;
-    margin-top: .5rem;
-    opacity: .9;
-  }
-  .score-breakdown {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: .75rem;
-    font-size: .85rem;
-    opacity: .8;
-  }
-
-  /* Cards */
-  .card {
-    background: #fff;
-    border-radius: .75rem;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,.06);
-  }
-  .card h2 {
-    font-size: 1.15rem;
-    color: #7c3aed;
-    margin-bottom: 1rem;
-    padding-bottom: .5rem;
-    border-bottom: 2px solid #ede9fe;
-  }
-
-  /* Form Groups */
-  .field { margin-bottom: 1.25rem; }
-  .field:last-child { margin-bottom: 0; }
-  .field-label {
-    font-weight: 600;
-    font-size: .95rem;
-    margin-bottom: .5rem;
-    display: block;
-  }
-  .radio-group { display: flex; flex-direction: column; gap: .4rem; }
-  .radio-option {
-    display: flex;
-    align-items: flex-start;
-    gap: .5rem;
-    padding: .55rem .75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: .5rem;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .radio-option:hover { border-color: #c4b5fd; background: #faf5ff; }
-  .radio-option.selected {
-    border-color: #7c3aed;
-    background: #f5f3ff;
-  }
-  .radio-option input[type="radio"] {
-    margin-top: .2rem;
-    accent-color: #7c3aed;
-    flex-shrink: 0;
-  }
-  .radio-option .option-text { font-size: .9rem; }
-  .radio-option .option-pts {
-    margin-left: auto;
-    font-weight: 700;
-    color: #7c3aed;
-    font-size: .85rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  /* Results Table */
-  .results-table { width: 100%; border-collapse: collapse; margin-top: .75rem; }
-  .results-table th {
-    background: #f1f5f9;
-    padding: .6rem .75rem;
-    text-align: left;
-    font-size: .8rem;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    color: #64748b;
-  }
-  .results-table td {
-    padding: .6rem .75rem;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: .9rem;
-  }
-  .results-table tr.highlighted {
-    background: #f5f3ff;
-    font-weight: 600;
-  }
-  .results-table tr.highlighted td {
-    color: #7c3aed;
-    border-bottom-color: #ddd6fe;
-  }
-
-  /* Explanation */
-  .explanation {
-    background: #f5f3ff;
-    border-left: 4px solid #7c3aed;
-    padding: 1rem 1.25rem;
-    border-radius: 0 .5rem .5rem 0;
-    margin-top: 1rem;
-    font-size: .9rem;
-    color: #4c1d95;
-  }
-
-  /* Footer */
-  .credit {
-    text-align: center;
-    font-size: .78rem;
-    color: #94a3b8;
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  @media (max-width: 480px) {
-    .score-banner .score-value { font-size: 2.5rem; }
-    .card { padding: 1rem; }
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f9fa;--card:#fff;--border:#dee2e6;--accent:#2563eb;--accent-light:#dbeafe;--text:#1a1a2e;--muted:#6b7280;--section-bg:#f1f5f9;--highlight:#fef3c7;--highlight-border:#f59e0b;--success:#059669;--danger:#dc2626}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:0 0 3rem}
+header{background:var(--accent);color:#fff;padding:1.25rem 1rem;text-align:center}
+header h1{font-size:1.4rem;font-weight:700;letter-spacing:.02em}
+header p{font-size:.85rem;opacity:.85;margin-top:.25rem}
+.container{max-width:820px;margin:0 auto;padding:0 1rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:10px;margin:1.25rem 0;padding:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.section-header{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--accent)}
+.step-badge{background:var(--accent);color:#fff;font-weight:700;font-size:.8rem;padding:.25rem .6rem;border-radius:6px;white-space:nowrap}
+.section-header h2{font-size:1.1rem;font-weight:600;color:var(--text)}
+.subsection{margin:1rem 0;padding:.75rem;background:var(--section-bg);border-radius:8px}
+.subsection h3{font-size:.95rem;font-weight:600;margin-bottom:.5rem;color:var(--accent)}
+.subsection h4{font-size:.85rem;font-weight:600;margin:.75rem 0 .35rem;color:var(--text)}
+table.score-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.4rem 0}
+table.score-table th,table.score-table td{padding:.4rem .35rem;text-align:center;border:1px solid var(--border)}
+table.score-table th{background:var(--accent-light);font-weight:600;font-size:.78rem}
+table.score-table td:first-child,table.score-table th:first-child{text-align:left;font-weight:500}
+table.score-table input[type=radio]{margin:0;cursor:pointer;width:16px;height:16px}
+.result-box{background:var(--accent-light);border:1px solid var(--accent);border-radius:6px;padding:.6rem .8rem;margin:.75rem 0;font-weight:600;font-size:.9rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.25rem}
+.result-box .label{color:var(--accent)}
+.result-box .value{color:var(--text);font-size:1rem}
+.checkbox-row{margin:.5rem 0;font-size:.85rem;display:flex;align-items:center;gap:.4rem}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;cursor:pointer}
+.radio-group{display:flex;gap:.75rem;flex-wrap:wrap;margin:.3rem 0}
+.radio-label{display:flex;align-items:center;gap:.3rem;font-size:.85rem;cursor:pointer;padding:.3rem .5rem;border:1px solid var(--border);border-radius:6px;background:#fff;transition:all .15s}
+.radio-label:has(input:checked){background:var(--accent-light);border-color:var(--accent)}
+.radio-label input[type=radio]{width:14px;height:14px;cursor:pointer}
+.lf-grid{width:100%;border-collapse:collapse;font-size:.85rem}
+.lf-grid th,.lf-grid td{padding:.5rem .4rem;text-align:center;border:1px solid var(--border)}
+.lf-grid th{background:var(--accent-light);font-weight:600}
+.lf-grid td:first-child{text-align:left;font-weight:500}
+.lf-mapping{margin:.5rem 0;font-size:.85rem}
+.lf-mapping table{border-collapse:collapse;width:100%}
+.lf-mapping th,.lf-mapping td{padding:.35rem .5rem;border:1px solid var(--border);text-align:center}
+.lf-mapping th{background:var(--accent-light);font-weight:600}
+.lf-mapping tr.active{background:var(--highlight);border:2px solid var(--highlight-border)}
+.hist-question{margin:.6rem 0}
+.hist-question .q-label{font-weight:600;font-size:.9rem;margin-bottom:.3rem}
+.scorecard{background:#fff;border:2px solid var(--accent);border-radius:8px;padding:1rem 1.25rem;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem;line-height:1.8}
+.scorecard .sc-header{font-weight:700;color:var(--accent);font-size:.9rem;margin-top:.5rem}
+.scorecard .sc-header:first-child{margin-top:0}
+.scorecard .sc-row{display:flex;justify-content:space-between;padding:0 .5rem}
+.scorecard .sc-row .sc-label{color:var(--muted)}
+.scorecard .sc-row .sc-val{font-weight:600}
+.scorecard .sc-divider{border-top:2px solid var(--accent);margin:.5rem 0}
+.scorecard .sc-total{display:flex;justify-content:space-between;padding:0 .5rem;font-size:1.1rem;font-weight:700;color:var(--accent)}
+.preg-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.75rem 0}
+.preg-table th,.preg-table td{padding:.45rem .5rem;border:1px solid var(--border);text-align:center}
+.preg-table th{background:var(--accent-light);font-weight:600}
+.preg-table tr.active{background:var(--highlight);font-weight:700}
+.stage-badge{display:inline-block;background:var(--accent);color:#fff;padding:.2rem .6rem;border-radius:4px;font-weight:600;font-size:.85rem}
+.reset-btn{display:block;margin:1.5rem auto;padding:.6rem 2rem;background:var(--danger);color:#fff;border:none;border-radius:6px;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.reset-btn:hover{opacity:.85}
+.citation{text-align:center;font-size:.75rem;color:var(--muted);margin:1.5rem 1rem;line-height:1.4}
+@media(max-width:600px){
+  .section{padding:.75rem}
+  table.score-table{font-size:.75rem}
+  table.score-table th,table.score-table td{padding:.3rem .2rem}
+  .scorecard{font-size:.78rem;padding:.75rem}
+  .radio-group{gap:.4rem}
+  .radio-label{padding:.25rem .35rem;font-size:.8rem}
+}
 </style>
 </head>
 <body>
+<header>
+  <h1>Endometriosis Fertility Index (EFI) Calculator</h1>
+  <p>Clinical Worksheet — rASRM Scoring + EFI</p>
+</header>
 <div class="container">
-  <h1>EFI Calculator</h1>
-  <p class="subtitle">Endometriosis Fertility Index</p>
 
-  <!-- Score Banner -->
-  <div class="score-banner">
-    <div class="score-label">EFI Score</div>
-    <div class="score-value" id="totalScore">—</div>
-    <div class="score-breakdown">
-      <span>Historical: <strong id="histScore">—</strong>/5</span>
-      <span>Surgical: <strong id="surgScore">—</strong>/5</span>
-    </div>
-    <div class="score-detail" id="scoreDetail">Select all factors below to calculate your score.</div>
+<!-- ===== SECTION 1: rASRM ===== -->
+<div class="section">
+  <div class="section-header">
+    <span class="step-badge">Step 1</span>
+    <h2>rASRM Endometriosis Score</h2>
   </div>
 
-  <!-- Historical Factors -->
-  <div class="card">
-    <h2>Section 1: Historical Factors</h2>
+  <!-- 1A Implants -->
+  <div class="subsection">
+    <h3>1A. Endometriosis Implants</h3>
 
-    <div class="field">
-      <span class="field-label">Age at Time of Surgery</span>
-      <div class="radio-group" id="ageGroup">
-        <label class="radio-option">
-          <input type="radio" name="age" value="2">
-          <span class="option-text">≤ 35 years</span>
-          <span class="option-pts">+2</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="age" value="1">
-          <span class="option-text">36–39 years</span>
-          <span class="option-pts">+1</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="age" value="0">
-          <span class="option-text">≥ 40 years</span>
-          <span class="option-pts">+0</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Years of Infertility</span>
-      <div class="radio-group" id="inferGroup">
-        <label class="radio-option">
-          <input type="radio" name="infertility" value="2">
-          <span class="option-text">≤ 3 years</span>
-          <span class="option-pts">+2</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="infertility" value="0">
-          <span class="option-text">&gt; 3 years</span>
-          <span class="option-pts">+0</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Prior Pregnancy</span>
-      <div class="radio-group" id="pregGroup">
-        <label class="radio-option">
-          <input type="radio" name="pregnancy" value="1">
-          <span class="option-text">Yes</span>
-          <span class="option-pts">+1</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="pregnancy" value="0">
-          <span class="option-text">No</span>
-          <span class="option-pts">+0</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Surgical Factors -->
-  <div class="card">
-    <h2>Section 2: Surgical Factors</h2>
-
-    <div class="field">
-      <span class="field-label">Surgical Findings &amp; Outcome</span>
-      <div class="radio-group" id="surgGroup">
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="5">
-          <span class="option-text">Mild endometriosis, healthy tubes, no adhesions</span>
-          <span class="option-pts">+5</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="4">
-          <span class="option-text">Moderate endometriosis, healthy tubes, all endo &amp; adhesions removed</span>
-          <span class="option-pts">+4</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="3">
-          <span class="option-text">Moderate endometriosis, mildly damaged tubes, all endo &amp; adhesions removed</span>
-          <span class="option-pts">+3</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="2">
-          <span class="option-text">Severe endometriosis, healthy tubes, no large endometriomas, all adhesions removed</span>
-          <span class="option-pts">+2</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="1">
-          <span class="option-text">Severe endometriosis, large endometriomas, mildly damaged tubes, most adhesions removed</span>
-          <span class="option-pts">+1</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="surgical" value="0">
-          <span class="option-text">Severe endometriosis, severe tubal damage, large endometriomas, many adhesions remaining</span>
-          <span class="option-pts">+0</span>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Results -->
-  <div class="card">
-    <h2>Estimated Pregnancy Rates</h2>
-    <table class="results-table">
-      <thead>
-        <tr><th>EFI Score</th><th>Pregnant at 1 Year</th><th>Pregnant at 3 Years</th></tr>
-      </thead>
-      <tbody id="resultsBody">
-        <tr data-range="9-10"><td>9–10</td><td>67%</td><td>75%</td></tr>
-        <tr data-range="7-8"><td>7–8</td><td>39%</td><td>66%</td></tr>
-        <tr data-range="6"><td>6</td><td>30%</td><td>54%</td></tr>
-        <tr data-range="5"><td>5</td><td>27%</td><td>42%</td></tr>
-        <tr data-range="4"><td>4</td><td>15%</td><td>28%</td></tr>
-        <tr data-range="0-3"><td>0–3</td><td>10%</td><td>10%</td></tr>
-      </tbody>
+    <h4>Peritoneum</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;1 cm</th><th>1–3 cm</th><th>&gt;3 cm</th></tr>
+      <tr><td>Superficial</td>
+        <td><input type="radio" name="peri_sup" value="0" checked></td>
+        <td><input type="radio" name="peri_sup" value="1"></td>
+        <td><input type="radio" name="peri_sup" value="2"></td>
+        <td><input type="radio" name="peri_sup" value="4"></td>
+      </tr>
+      <tr><td>Deep</td>
+        <td><input type="radio" name="peri_deep" value="0" checked></td>
+        <td><input type="radio" name="peri_deep" value="2"></td>
+        <td><input type="radio" name="peri_deep" value="4"></td>
+        <td><input type="radio" name="peri_deep" value="6"></td>
+      </tr>
     </table>
-    <div class="explanation" id="explanation">
-      Complete the selections above to see your estimated pregnancy rates based on the EFI scoring system.
+
+    <h4>Right Ovary</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;1 cm</th><th>1–3 cm</th><th>&gt;3 cm</th></tr>
+      <tr><td>Superficial</td>
+        <td><input type="radio" name="rov_sup" value="0" checked></td>
+        <td><input type="radio" name="rov_sup" value="1"></td>
+        <td><input type="radio" name="rov_sup" value="2"></td>
+        <td><input type="radio" name="rov_sup" value="4"></td>
+      </tr>
+      <tr><td>Deep</td>
+        <td><input type="radio" name="rov_deep" value="0" checked></td>
+        <td><input type="radio" name="rov_deep" value="4"></td>
+        <td><input type="radio" name="rov_deep" value="16"></td>
+        <td><input type="radio" name="rov_deep" value="20"></td>
+      </tr>
+    </table>
+
+    <h4>Left Ovary</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;1 cm</th><th>1–3 cm</th><th>&gt;3 cm</th></tr>
+      <tr><td>Superficial</td>
+        <td><input type="radio" name="lov_sup" value="0" checked></td>
+        <td><input type="radio" name="lov_sup" value="1"></td>
+        <td><input type="radio" name="lov_sup" value="2"></td>
+        <td><input type="radio" name="lov_sup" value="4"></td>
+      </tr>
+      <tr><td>Deep</td>
+        <td><input type="radio" name="lov_deep" value="0" checked></td>
+        <td><input type="radio" name="lov_deep" value="4"></td>
+        <td><input type="radio" name="lov_deep" value="16"></td>
+        <td><input type="radio" name="lov_deep" value="20"></td>
+      </tr>
+    </table>
+
+    <h4>Posterior Cul-de-sac Obliteration</h4>
+    <div class="radio-group">
+      <label class="radio-label"><input type="radio" name="cds" value="0" checked> None (0)</label>
+      <label class="radio-label"><input type="radio" name="cds" value="4"> Partial (4)</label>
+      <label class="radio-label"><input type="radio" name="cds" value="40"> Complete (40)</label>
+    </div>
+
+    <div class="result-box">
+      <span class="label">AFS Endometriosis Score (Implants)</span>
+      <span class="value" id="afs-endo">0</span>
+    </div>
+    <div style="font-size:.82rem;color:var(--muted);margin-top:-.25rem">
+      EFI: &lt;16 → 1 pt · ≥16 → 0 pts → <strong id="endo-efi-pt">1 pt</strong>
     </div>
   </div>
 
-  <p class="credit">
-    Based on Adamson GD &amp; Pasta DJ. <em>Fertil Steril</em> 2010;94(5):1609–15.<br>
-    This tool is for informational purposes only and does not constitute medical advice.
-  </p>
+  <!-- 1B Adhesions -->
+  <div class="subsection">
+    <h3>1B. Adhesions</h3>
+
+    <h4>Right Ovary Adhesions</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;⅓</th><th>⅓–⅔</th><th>&gt;⅔</th></tr>
+      <tr><td>Filmy</td>
+        <td><input type="radio" name="adh_rov_filmy" value="0" checked></td>
+        <td><input type="radio" name="adh_rov_filmy" value="1"></td>
+        <td><input type="radio" name="adh_rov_filmy" value="2"></td>
+        <td><input type="radio" name="adh_rov_filmy" value="4"></td>
+      </tr>
+      <tr><td>Dense</td>
+        <td><input type="radio" name="adh_rov_dense" value="0" checked></td>
+        <td><input type="radio" name="adh_rov_dense" value="4"></td>
+        <td><input type="radio" name="adh_rov_dense" value="8"></td>
+        <td><input type="radio" name="adh_rov_dense" value="16"></td>
+      </tr>
+    </table>
+
+    <h4>Left Ovary Adhesions</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;⅓</th><th>⅓–⅔</th><th>&gt;⅔</th></tr>
+      <tr><td>Filmy</td>
+        <td><input type="radio" name="adh_lov_filmy" value="0" checked></td>
+        <td><input type="radio" name="adh_lov_filmy" value="1"></td>
+        <td><input type="radio" name="adh_lov_filmy" value="2"></td>
+        <td><input type="radio" name="adh_lov_filmy" value="4"></td>
+      </tr>
+      <tr><td>Dense</td>
+        <td><input type="radio" name="adh_lov_dense" value="0" checked></td>
+        <td><input type="radio" name="adh_lov_dense" value="4"></td>
+        <td><input type="radio" name="adh_lov_dense" value="8"></td>
+        <td><input type="radio" name="adh_lov_dense" value="16"></td>
+      </tr>
+    </table>
+
+    <h4>Right Tube Adhesions</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;⅓</th><th>⅓–⅔</th><th>&gt;⅔</th></tr>
+      <tr><td>Filmy</td>
+        <td><input type="radio" name="adh_rt_filmy" value="0" checked></td>
+        <td><input type="radio" name="adh_rt_filmy" value="1"></td>
+        <td><input type="radio" name="adh_rt_filmy" value="2"></td>
+        <td><input type="radio" name="adh_rt_filmy" value="4"></td>
+      </tr>
+      <tr><td>Dense</td>
+        <td><input type="radio" name="adh_rt_dense" value="0" checked></td>
+        <td><input type="radio" name="adh_rt_dense" value="4"></td>
+        <td><input type="radio" name="adh_rt_dense" value="8"></td>
+        <td><input type="radio" name="adh_rt_dense" value="16"></td>
+      </tr>
+    </table>
+    <div class="checkbox-row">
+      <input type="checkbox" id="rt_fim"> <label for="rt_fim">Fimbriated end completely enclosed? (overrides to 16)</label>
+    </div>
+
+    <h4>Left Tube Adhesions</h4>
+    <table class="score-table">
+      <tr><th></th><th>None</th><th>&lt;⅓</th><th>⅓–⅔</th><th>&gt;⅔</th></tr>
+      <tr><td>Filmy</td>
+        <td><input type="radio" name="adh_lt_filmy" value="0" checked></td>
+        <td><input type="radio" name="adh_lt_filmy" value="1"></td>
+        <td><input type="radio" name="adh_lt_filmy" value="2"></td>
+        <td><input type="radio" name="adh_lt_filmy" value="4"></td>
+      </tr>
+      <tr><td>Dense</td>
+        <td><input type="radio" name="adh_lt_dense" value="0" checked></td>
+        <td><input type="radio" name="adh_lt_dense" value="4"></td>
+        <td><input type="radio" name="adh_lt_dense" value="8"></td>
+        <td><input type="radio" name="adh_lt_dense" value="16"></td>
+      </tr>
+    </table>
+    <div class="checkbox-row">
+      <input type="checkbox" id="lt_fim"> <label for="lt_fim">Fimbriated end completely enclosed? (overrides to 16)</label>
+    </div>
+
+    <div class="result-box">
+      <span class="label">Adhesion Subtotal</span>
+      <span class="value" id="adh-total">0</span>
+    </div>
+  </div>
+
+  <!-- AFS Total + Stage -->
+  <div class="result-box" style="background:#e0f2fe;border-color:var(--accent);font-size:1rem">
+    <span class="label">AFS Total Score (Implants + Adhesions)</span>
+    <span class="value" id="afs-total">0</span>
+  </div>
+  <div style="font-size:.82rem;color:var(--muted)">
+    EFI: &lt;71 → 1 pt · ≥71 → 0 pts → <strong id="total-efi-pt">1 pt</strong>
+  </div>
+  <div class="result-box" style="margin-top:.5rem">
+    <span class="label">rASRM Stage</span>
+    <span class="value"><span class="stage-badge" id="stage">—</span></span>
+  </div>
 </div>
 
+<!-- ===== SECTION 2: LF Score ===== -->
+<div class="section">
+  <div class="section-header">
+    <span class="step-badge">Step 2</span>
+    <h2>Least Function (LF) Score</h2>
+  </div>
+  <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem">Rate each structure: 4 = Normal, 2 = Moderate dysfunction, 1 = Severe dysfunction, 0 = Absent/nonfunctional</p>
+
+  <table class="lf-grid">
+    <tr><th></th><th>LEFT</th><th>RIGHT</th></tr>
+    <tr>
+      <td>Tube</td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_l_tube" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_l_tube" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_l_tube" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_l_tube" value="4"> 4</label>
+        </div>
+      </td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_r_tube" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_r_tube" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_r_tube" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_r_tube" value="4"> 4</label>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>Fimbria</td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_l_fim" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_l_fim" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_l_fim" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_l_fim" value="4"> 4</label>
+        </div>
+      </td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_r_fim" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_r_fim" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_r_fim" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_r_fim" value="4"> 4</label>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>Ovary</td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_l_ov" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_l_ov" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_l_ov" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_l_ov" value="4"> 4</label>
+        </div>
+      </td>
+      <td>
+        <div class="radio-group" style="justify-content:center">
+          <label class="radio-label"><input type="radio" name="lf_r_ov" value="0"> 0</label>
+          <label class="radio-label"><input type="radio" name="lf_r_ov" value="1"> 1</label>
+          <label class="radio-label"><input type="radio" name="lf_r_ov" value="2"> 2</label>
+          <label class="radio-label"><input type="radio" name="lf_r_ov" value="4"> 4</label>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin:.75rem 0">
+    <div class="result-box" style="flex:1;min-width:200px">
+      <span class="label">Left Subtotal</span>
+      <span class="value" id="lf-left">—</span>
+    </div>
+    <div class="result-box" style="flex:1;min-width:200px">
+      <span class="label">Right Subtotal</span>
+      <span class="value" id="lf-right">—</span>
+    </div>
+  </div>
+  <div class="result-box" style="background:#e0f2fe;border-color:var(--accent)">
+    <span class="label">LF Score (least functional side)</span>
+    <span class="value" id="lf-score">—</span>
+  </div>
+
+  <div class="lf-mapping">
+    <table>
+      <tr><th>LF Score</th><th>Function</th><th>EFI Points</th></tr>
+      <tr id="lf-row-3"><td>7–12</td><td>High</td><td>3 pts</td></tr>
+      <tr id="lf-row-2"><td>4–6</td><td>Moderate</td><td>2 pts</td></tr>
+      <tr id="lf-row-1"><td>1–3</td><td>Low</td><td>1 pt</td></tr>
+      <tr id="lf-row-0"><td>0</td><td>None</td><td>0 pts</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: Historical Factors ===== -->
+<div class="section">
+  <div class="section-header">
+    <span class="step-badge">Step 3</span>
+    <h2>Historical Factors</h2>
+  </div>
+
+  <div class="hist-question">
+    <div class="q-label">Age at Surgery</div>
+    <div class="radio-group">
+      <label class="radio-label"><input type="radio" name="hist_age" value="2"> ≤ 35 yrs (2 pts)</label>
+      <label class="radio-label"><input type="radio" name="hist_age" value="1"> 36–39 yrs (1 pt)</label>
+      <label class="radio-label"><input type="radio" name="hist_age" value="0"> ≥ 40 yrs (0 pts)</label>
+    </div>
+  </div>
+
+  <div class="hist-question">
+    <div class="q-label">Length of Infertility</div>
+    <div class="radio-group">
+      <label class="radio-label"><input type="radio" name="hist_inf" value="2"> ≤ 3 years (2 pts)</label>
+      <label class="radio-label"><input type="radio" name="hist_inf" value="0"> &gt; 3 years (0 pts)</label>
+    </div>
+  </div>
+
+  <div class="hist-question">
+    <div class="q-label">Prior Pregnancy</div>
+    <div class="radio-group">
+      <label class="radio-label"><input type="radio" name="hist_preg" value="1"> Yes (1 pt)</label>
+      <label class="radio-label"><input type="radio" name="hist_preg" value="0"> No (0 pts)</label>
+    </div>
+  </div>
+
+  <div class="result-box">
+    <span class="label">Historical Factor Subtotal</span>
+    <span class="value"><span id="hist-total">—</span> / 5</span>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: EFI Summary ===== -->
+<div class="section">
+  <div class="section-header">
+    <span class="step-badge">Step 4</span>
+    <h2>EFI Score Summary</h2>
+  </div>
+
+  <div class="scorecard">
+    <div class="sc-header">HISTORICAL FACTORS</div>
+    <div class="sc-row"><span class="sc-label">Age</span><span class="sc-val" id="sc-age">— pts</span></div>
+    <div class="sc-row"><span class="sc-label">Length of Infertility</span><span class="sc-val" id="sc-inf">— pts</span></div>
+    <div class="sc-row"><span class="sc-label">Prior Pregnancy</span><span class="sc-val" id="sc-preg">— pts</span></div>
+    <div class="sc-row"><span class="sc-label"><strong>Subtotal</strong></span><span class="sc-val" id="sc-hist-sub">— / 5</span></div>
+
+    <div class="sc-header">SURGICAL FACTORS</div>
+    <div class="sc-row"><span class="sc-label">LF Score (<span id="sc-lf-raw">—</span>)</span><span class="sc-val"><span id="sc-lf-pts">—</span> / 3</span></div>
+    <div class="sc-row"><span class="sc-label">AFS Endo Score (<span id="sc-endo-raw">0</span>)</span><span class="sc-val"><span id="sc-endo-pts">1</span> / 1</span></div>
+    <div class="sc-row"><span class="sc-label">AFS Total Score (<span id="sc-total-raw">0</span>)</span><span class="sc-val"><span id="sc-total-pts">1</span> / 1</span></div>
+    <div class="sc-row"><span class="sc-label"><strong>Subtotal</strong></span><span class="sc-val" id="sc-surg-sub">— / 5</span></div>
+
+    <div class="sc-divider"></div>
+    <div class="sc-total"><span>EFI TOTAL SCORE</span><span id="sc-efi-total">— / 10</span></div>
+    <div class="sc-row" style="margin-top:.25rem"><span class="sc-label">rASRM Stage</span><span class="sc-val" id="sc-stage">—</span></div>
+  </div>
+
+  <h3 style="margin:1rem 0 .5rem;font-size:.95rem">Estimated Non-ART Pregnancy Rates</h3>
+  <table class="preg-table">
+    <tr><th>EFI Score</th><th>Pregnant at 1 Year</th><th>Pregnant at 3 Years</th></tr>
+    <tr id="pr-910"><td>9–10</td><td>67%</td><td>75%</td></tr>
+    <tr id="pr-78"><td>7–8</td><td>39%</td><td>66%</td></tr>
+    <tr id="pr-6"><td>6</td><td>30%</td><td>54%</td></tr>
+    <tr id="pr-5"><td>5</td><td>27%</td><td>42%</td></tr>
+    <tr id="pr-4"><td>4</td><td>15%</td><td>28%</td></tr>
+    <tr id="pr-03"><td>0–3</td><td>10%</td><td>10%</td></tr>
+  </table>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset All Fields</button>
+
+<div class="citation">
+  Based on Adamson GD &amp; Pasta DJ. <em>Fertil Steril</em> 2010;94(5):1609–15<br>
+  and the revised AFS/rASRM Classification System.
+</div>
+
+</div><!-- /container -->
+
 <script>
-(function() {
-  const rateTable = [
-    { min: 9, max: 10, range: '9-10', y1: '67%', y3: '75%' },
-    { min: 7, max: 8,  range: '7-8',  y1: '39%', y3: '66%' },
-    { min: 6, max: 6,  range: '6',    y1: '30%', y3: '54%' },
-    { min: 5, max: 5,  range: '5',    y1: '27%', y3: '42%' },
-    { min: 4, max: 4,  range: '4',    y1: '15%', y3: '28%' },
-    { min: 0, max: 3,  range: '0-3',  y1: '10%', y3: '10%' }
+// Utility: get selected radio value or null
+function rv(name) {
+  const el = document.querySelector('input[name="'+name+'"]:checked');
+  return el ? parseInt(el.value, 10) : null;
+}
+
+function calculate() {
+  // 1A: Implants
+  const implantNames = ['peri_sup','peri_deep','rov_sup','rov_deep','lov_sup','lov_deep','cds'];
+  let afsEndo = 0;
+  implantNames.forEach(n => { const v = rv(n); if (v !== null) afsEndo += v; });
+  document.getElementById('afs-endo').textContent = afsEndo;
+
+  const endoPt = afsEndo < 16 ? 1 : 0;
+  document.getElementById('endo-efi-pt').textContent = endoPt + ' pt';
+
+  // 1B: Adhesions
+  const adhOvNames = ['adh_rov_filmy','adh_rov_dense','adh_lov_filmy','adh_lov_dense'];
+  let adhTotal = 0;
+  adhOvNames.forEach(n => { const v = rv(n); if (v !== null) adhTotal += v; });
+
+  // Right tube - fimbriated override
+  const rtFim = document.getElementById('rt_fim').checked;
+  if (rtFim) {
+    adhTotal += 16;
+  } else {
+    const v1 = rv('adh_rt_filmy'); if (v1 !== null) adhTotal += v1;
+    const v2 = rv('adh_rt_dense'); if (v2 !== null) adhTotal += v2;
+  }
+
+  // Left tube - fimbriated override
+  const ltFim = document.getElementById('lt_fim').checked;
+  if (ltFim) {
+    adhTotal += 16;
+  } else {
+    const v1 = rv('adh_lt_filmy'); if (v1 !== null) adhTotal += v1;
+    const v2 = rv('adh_lt_dense'); if (v2 !== null) adhTotal += v2;
+  }
+
+  document.getElementById('adh-total').textContent = adhTotal;
+
+  const afsTotal = afsEndo + adhTotal;
+  document.getElementById('afs-total').textContent = afsTotal;
+
+  const totalPt = afsTotal < 71 ? 1 : 0;
+  document.getElementById('total-efi-pt').textContent = totalPt + ' pt';
+
+  // Stage
+  let stageText = '—';
+  if (afsTotal > 0) {
+    if (afsTotal <= 5) stageText = 'I (Minimal)';
+    else if (afsTotal <= 15) stageText = 'II (Mild)';
+    else if (afsTotal <= 40) stageText = 'III (Moderate)';
+    else stageText = 'IV (Severe)';
+  }
+  document.getElementById('stage').textContent = stageText;
+
+  // Section 2: LF Score
+  const lfLTube = rv('lf_l_tube'), lfLFim = rv('lf_l_fim'), lfLOv = rv('lf_l_ov');
+  const lfRTube = rv('lf_r_tube'), lfRFim = rv('lf_r_fim'), lfROv = rv('lf_r_ov');
+
+  const lLeft = (lfLTube !== null && lfLFim !== null && lfLOv !== null) ? lfLTube + lfLFim + lfLOv : null;
+  const lRight = (lfRTube !== null && lfRFim !== null && lfROv !== null) ? lfRTube + lfRFim + lfROv : null;
+
+  document.getElementById('lf-left').textContent = lLeft !== null ? lLeft : '—';
+  document.getElementById('lf-right').textContent = lRight !== null ? lRight : '—';
+
+  let lfScore = null;
+  if (lLeft !== null && lRight !== null) {
+    lfScore = Math.min(lLeft, lRight);
+    const side = lLeft <= lRight ? 'Left' : 'Right';
+    document.getElementById('lf-score').textContent = lfScore + ' (' + side + ')';
+  } else if (lLeft !== null) {
+    lfScore = lLeft;
+    document.getElementById('lf-score').textContent = lfScore + ' (Left only)';
+  } else if (lRight !== null) {
+    lfScore = lRight;
+    document.getElementById('lf-score').textContent = lfScore + ' (Right only)';
+  } else {
+    document.getElementById('lf-score').textContent = '—';
+  }
+
+  // LF → EFI pts
+  let lfPts = null;
+  document.querySelectorAll('.lf-mapping tr').forEach(r => r.classList.remove('active'));
+  if (lfScore !== null) {
+    if (lfScore >= 7) { lfPts = 3; document.getElementById('lf-row-3').classList.add('active'); }
+    else if (lfScore >= 4) { lfPts = 2; document.getElementById('lf-row-2').classList.add('active'); }
+    else if (lfScore >= 1) { lfPts = 1; document.getElementById('lf-row-1').classList.add('active'); }
+    else { lfPts = 0; document.getElementById('lf-row-0').classList.add('active'); }
+  }
+
+  // Section 3: Historical
+  const hAge = rv('hist_age'), hInf = rv('hist_inf'), hPreg = rv('hist_preg');
+  const histTotal = (hAge !== null ? hAge : 0) + (hInf !== null ? hInf : 0) + (hPreg !== null ? hPreg : 0);
+  const histComplete = hAge !== null && hInf !== null && hPreg !== null;
+  document.getElementById('hist-total').textContent = histComplete ? histTotal : '—';
+
+  // Section 4: Scorecard
+  document.getElementById('sc-age').textContent = hAge !== null ? hAge + ' pts' : '— pts';
+  document.getElementById('sc-inf').textContent = hInf !== null ? hInf + ' pts' : '— pts';
+  document.getElementById('sc-preg').textContent = hPreg !== null ? hPreg + ' pts' : '— pts';
+  document.getElementById('sc-hist-sub').textContent = histComplete ? histTotal + ' / 5' : '— / 5';
+
+  document.getElementById('sc-lf-raw').textContent = lfScore !== null ? lfScore : '—';
+  document.getElementById('sc-lf-pts').textContent = lfPts !== null ? lfPts : '—';
+  document.getElementById('sc-endo-raw').textContent = afsEndo;
+  document.getElementById('sc-endo-pts').textContent = endoPt;
+  document.getElementById('sc-total-raw').textContent = afsTotal;
+  document.getElementById('sc-total-pts').textContent = totalPt;
+
+  const surgSub = (lfPts !== null ? lfPts : 0) + endoPt + totalPt;
+  const surgComplete = lfPts !== null;
+  document.getElementById('sc-surg-sub').textContent = surgComplete ? surgSub + ' / 5' : '— / 5';
+
+  const allComplete = histComplete && surgComplete;
+  let efiTotal = null;
+  if (allComplete) {
+    efiTotal = histTotal + surgSub;
+    document.getElementById('sc-efi-total').textContent = efiTotal + ' / 10';
+  } else {
+    document.getElementById('sc-efi-total').textContent = '— / 10';
+  }
+
+  document.getElementById('sc-stage').textContent = stageText;
+
+  // Pregnancy rate highlight
+  const prIds = ['pr-910','pr-78','pr-6','pr-5','pr-4','pr-03'];
+  prIds.forEach(id => document.getElementById(id).classList.remove('active'));
+  if (efiTotal !== null) {
+    if (efiTotal >= 9) document.getElementById('pr-910').classList.add('active');
+    else if (efiTotal >= 7) document.getElementById('pr-78').classList.add('active');
+    else if (efiTotal === 6) document.getElementById('pr-6').classList.add('active');
+    else if (efiTotal === 5) document.getElementById('pr-5').classList.add('active');
+    else if (efiTotal === 4) document.getElementById('pr-4').classList.add('active');
+    else document.getElementById('pr-03').classList.add('active');
+  }
+}
+
+function resetAll() {
+  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  // Re-check all "None/0" defaults for implants and adhesions
+  const defaultZeros = [
+    'peri_sup','peri_deep','rov_sup','rov_deep','lov_sup','lov_deep','cds',
+    'adh_rov_filmy','adh_rov_dense','adh_lov_filmy','adh_lov_dense',
+    'adh_rt_filmy','adh_rt_dense','adh_lt_filmy','adh_lt_dense'
   ];
-
-  function getSelected(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? parseInt(el.value, 10) : null;
-  }
-
-  function getRate(score) {
-    return rateTable.find(r => score >= r.min && score <= r.max);
-  }
-
-  function update() {
-    const age = getSelected('age');
-    const inf = getSelected('infertility');
-    const preg = getSelected('pregnancy');
-    const surg = getSelected('surgical');
-
-    const histParts = [age, inf, preg];
-    const histComplete = histParts.every(v => v !== null);
-    const surgComplete = surg !== null;
-    const histTotal = histComplete ? histParts.reduce((a, b) => a + b, 0) : null;
-
-    document.getElementById('histScore').textContent = histTotal !== null ? histTotal : '—';
-    document.getElementById('surgScore').textContent = surgComplete ? surg : '—';
-
-    // Highlight selected options
-    document.querySelectorAll('.radio-option').forEach(label => {
-      const input = label.querySelector('input');
-      label.classList.toggle('selected', input.checked);
-    });
-
-    // Highlight results table
-    document.querySelectorAll('#resultsBody tr').forEach(tr => tr.classList.remove('highlighted'));
-
-    if (histComplete && surgComplete) {
-      const total = histTotal + surg;
-      document.getElementById('totalScore').textContent = total + '/10';
-      const rate = getRate(total);
-
-      if (rate) {
-        const row = document.querySelector(`tr[data-range="${rate.range}"]`);
-        if (row) row.classList.add('highlighted');
-
-        document.getElementById('scoreDetail').textContent =
-          `${rate.y1} chance of pregnancy at 1 year · ${rate.y3} at 3 years`;
-
-        let meaning;
-        if (total >= 9) meaning = 'An excellent prognosis — most patients in this range achieve pregnancy without IVF.';
-        else if (total >= 7) meaning = 'A good prognosis — natural conception or less invasive treatments may be effective.';
-        else if (total >= 5) meaning = 'A moderate prognosis — consider discussing both natural attempts and assisted reproduction with your provider.';
-        else if (total >= 4) meaning = 'A lower prognosis — assisted reproductive technologies such as IVF may improve outcomes.';
-        else meaning = 'A more challenging prognosis — IVF is typically recommended to maximize chances of pregnancy.';
-
-        document.getElementById('explanation').innerHTML =
-          `<strong>Your EFI score is ${total}/10.</strong> ${meaning} Estimated pregnancy rate is <strong>${rate.y1}</strong> at 1 year and <strong>${rate.y3}</strong> at 3 years after surgical treatment.`;
-      }
-    } else {
-      document.getElementById('totalScore').textContent = '—';
-      document.getElementById('scoreDetail').textContent = 'Select all factors below to calculate your score.';
-      document.getElementById('explanation').textContent =
-        'Complete the selections above to see your estimated pregnancy rates based on the EFI scoring system.';
-    }
-  }
-
-  document.querySelectorAll('input[type="radio"]').forEach(input => {
-    input.addEventListener('change', update);
+  defaultZeros.forEach(name => {
+    const el = document.querySelector('input[name="'+name+'"][value="0"]');
+    if (el) el.checked = true;
   });
-})();
+  document.getElementById('rt_fim').checked = false;
+  document.getElementById('lt_fim').checked = false;
+  calculate();
+}
+
+// Attach listeners
+document.addEventListener('change', calculate);
+calculate();
 </script>
 </body>
 </html>
