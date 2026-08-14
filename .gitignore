@@ -1,0 +1,40 @@
+# Node
+node_modules/
+npm-debug.log*
+*.log
+
+# Capacitor generated config (derived from capacitor.config.ts on every sync)
+ios/App/App/capacitor.config.json
+ios/App/App/config.xml
+ios/capacitor-cordova-ios-plugins/
+
+# Web assets copied into the app bundle by `cap sync` — www/ is the source of truth
+ios/App/App/public/
+
+# CocoaPods (unused here — this project uses SPM — but kept so a pod-based
+# machine running `cap sync` never commits the vendored pods)
+ios/App/Pods/
+ios/App/Podfile.lock
+
+# Swift Package Manager build state
+# (Package.resolved is deliberately NOT ignored — it pins the Capacitor
+#  xcframework versions and belongs in the repo for reproducible app builds)
+.build/
+.swiftpm/
+ios/App/CapApp-SPM/.build/
+ios/App/CapApp-SPM/Packages/
+
+# Xcode build/user state
+DerivedData/
+ios/App/build/
+ios/App/output/
+build/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.moved-aside
+*.ipa
+*.xcarchive
+
+# macOS
+.DS_Store

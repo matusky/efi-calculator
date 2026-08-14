@@ -1,0 +1,88 @@
+name: iOS
+
+# Smoke build for the Capacitor iOS wrapper: proves the app still compiles after
+# any change to the web assets, the native project, or the Capacitor config.
+# No signing, no simulator run, no upload — signing needs an Apple Developer
+# account this project does not have yet.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "www/**"
+      - "ios/**"
+      - "capacitor.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "www/**"
+      - "ios/**"
+      - "capacitor.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Simulator smoke build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      # @capacitor/cli 8 declares engines.node >=22.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      # Copies www/ into ios/App/App/public and regenerates the native config.
+      # Both are gitignored, so CI must sync before it builds.
+      - name: Capacitor sync
+        run: npx cap sync ios
+
+      - name: Assert web assets landed in the app bundle
+        run: test -f ios/App/App/public/index.html
+
+      # Fetching the Capacitor Swift packages is the slow part of a cold build.
+      # -derivedDataPath below is fixed, so its SourcePackages dir is cacheable.
+      # (-clonedSourcePackagesDirectoryPath is not a valid flag in Xcode 26.)
+      - name: Cache Swift package checkouts
+        uses: actions/cache@v4
+        with:
+          path: ios/App/build/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved', 'ios/App/CapApp-SPM/Package.swift') }}
+          restore-keys: |
+            spm-${{ runner.os }}-
+
+      # This project uses Swift Package Manager (ios/App/CapApp-SPM), not
+      # CocoaPods — there is no Podfile, so there is nothing to `pod install`.
+      #
+      # The Capacitor template commits no shared .xcscheme; xcodebuild autocreates
+      # the "App" scheme from the project's single target, which is what makes
+      # -derivedDataPath usable here (it is rejected in -target mode).
+      - name: Build for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ios/App/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""

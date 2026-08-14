@@ -59,22 +59,40 @@ Everything calculates in real time as you make selections. A reset button clears
 
 ## Running Locally
 
-It's a single HTML file with no dependencies:
+The whole calculator is one HTML file — `www/index.html` — with no build step and no dependencies:
 
 ```bash
 # Clone the repo
 git clone https://github.com/merit-blake/efi-calculator.git
 
 # Open it
-open efi-calculator/index.html
-# or just double-click index.html in Finder / your file manager
+open efi-calculator/www/index.html
+# or just double-click www/index.html in Finder / your file manager
 ```
 
-Works in any modern browser. Mobile-friendly.
+Works in any modern browser. Mobile-friendly. (`www/` is the web root because it doubles as the Capacitor app bundle's web directory — see [iOS App](#ios-app).)
 
 ## Deployment
 
-The site auto-deploys to **GitHub Pages** on every push to `main` via the workflow in `.github/workflows/pages.yml`. No build step — it serves the HTML file directly.
+The site auto-deploys to **GitHub Pages** on every push to `main` via the workflow in `.github/workflows/pages.yml`. No build step — it publishes the `www/` directory as-is.
+
+## iOS App
+
+The same `www/index.html` also ships as a native iOS app, wrapped with [Capacitor](https://capacitorjs.com/). Capacitor is a thin native shell: an Xcode project whose only screen is a full-window `WKWebView` that loads the copied web assets from the app bundle. There is no rewrite and no second codebase — edit `www/index.html` and both the website and the app change.
+
+**Offline works by construction.** Every asset the page needs is bundled — CSS and JavaScript are inline in `index.html`, and there are no external scripts, stylesheets, fonts, or remote requests of any kind. Once `cap sync` copies `www/` into the app bundle the calculator runs entirely from local files, so no connectivity is needed after install. (The service worker in `www/sw.js` is for the *web* build only; it registers just over `http(s)`, so it is skipped under the app's `capacitor://` scheme, where the assets are already local.)
+
+Configuration lives in `capacitor.config.ts` — app id `ky.matus.efi`, app name "EFI Calculator", web directory `www`. The native project is in `ios/`, targets iOS 15+, builds for iPhone and iPad, and uses Swift Package Manager (no CocoaPods, so `cap open ios` opens `ios/App/App.xcodeproj` directly — there is no `.xcworkspace`).
+
+```bash
+npm install          # once — installs the Capacitor CLI and iOS runtime
+npx cap sync ios     # copy www/ into the app bundle + refresh native deps
+npx cap open ios     # open the project in Xcode, then Run
+```
+
+`npm run sync` and `npm run open:ios` are aliases for the last two. Re-run `npx cap sync ios` after any edit to `www/`; `ios/App/App/public/` is generated output and is deliberately untracked, so a fresh clone must sync before its first build.
+
+Shipping it to the App Store needs the Apple account holder — enrollment, the app record, signing, TestFlight, privacy answers, and review notes. That checklist is in [APPSTORE.md](APPSTORE.md).
 
 ## Citation
 

@@ -1,0 +1,19 @@
+{
+  "name": "efi-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Endometriosis Fertility Index (EFI) calculator worksheet",
+  "scripts": {
+    "sync": "cap sync ios",
+    "open:ios": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0",
+    "typescript": "^7.0.2"
+  }
+}
