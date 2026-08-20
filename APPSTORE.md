@@ -8,12 +8,14 @@ Current native settings, already in the repo:
 
 | Setting | Value | Where |
 |---|---|---|
-| App ID / bundle id | `ky.matus.efi` | `capacitor.config.ts` + Xcode target |
+| App ID / bundle id | `com.plynth.efi` — **settled 2026-08-20, permanent** | `capacitor.config.ts` + Xcode target |
 | App name | EFI Calculator | `capacitor.config.ts`, `CFBundleDisplayName` |
 | Version / build | 1.0 / 1 | `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` |
 | Minimum iOS | 15.0 | `IPHONEOS_DEPLOYMENT_TARGET` |
 | Devices | iPhone + iPad | `TARGETED_DEVICE_FAMILY = "1,2"` |
 | Signing style | Automatic | `CODE_SIGN_STYLE = Automatic` |
+| Publisher / seller | **Plynth LLC** (CA B20260372673) | App Store Connect |
+| Export compliance | declared exempt | `ITSAppUsesNonExemptEncryption = false` |
 | Dependencies | `@capacitor/core`, `@capacitor/ios` only | `package.json` |
 
 ---
@@ -24,24 +26,31 @@ These shipped with the app-feasibility branch; each just needs a glance before s
 
 - [x] **In-app disclaimer.** `www/index.html` shows a short disclaimer line directly under the header ("Informational tool — not medical advice…") and the full README disclaimer paragraph at the bottom of the page. Guideline 1.4.1 expects medical apps to state their limits inside the app; both are visible to a reviewer, the header line without any scrolling.
 - [x] **App artwork.** The icon and splash screens are the custom EFI wordmark (white Georgia "EFI" on navy `#1e2a35`), not Capacitor templates: `AppIcon.appiconset/AppIcon-512@2x.png` (1024×1024, no alpha) plus six `Splash.imageset/Default@{1,2,3}x~universal~anyany[-dark].png` (2732×2732, light and dark). Regeneration pipeline: `assets/source/generate.sh` → `npx capacitor-assets generate --ios` (needs macOS with Chrome + ImageMagick).
-- [x] **Privacy policy page.** `www/privacy.html` exists and states truthfully that nothing is collected, stored, or transmitted. The Pages workflow publishes `www/` as-is, so after the branch merges to `main` it is live at `https://merit-blake.github.io/efi-calculator/privacy.html` — confirm that URL loads before pasting it into App Store Connect.
+- [x] **Privacy policy page.** `www/privacy.html` exists and states truthfully that nothing is collected, stored, or transmitted. The Pages workflow publishes `www/` as-is, so after the branch merges to `main` it is live at `https://matusky.github.io/efi-calculator/privacy.html` — confirm that URL loads before pasting it into App Store Connect.
 
 Optional, but it halves the screenshot work: if the iPad build isn't wanted for v1, set **TARGETED_DEVICE_FAMILY** to `1` (iPhone only) in Xcode → App target → Build Settings. Otherwise iPad screenshots are mandatory (see Step 8).
 
 ---
 
-## Step 1 — Enroll in the Apple Developer Program
+## Step 1 — Apple Developer Program — ✅ done
 
-You cannot create an App Store Connect record, sign for distribution, or use TestFlight without this.
+Organization enrollment for **Plynth LLC** was approved **2026-08-19**, membership
+`432Q357UBY`. The seller name shown on the App Store is `Plynth LLC`.
 
-1. Go to <https://developer.apple.com/programs/enroll/> and sign in with the Apple ID that should **own** the app long-term. This is a durable choice — moving an app between Apple IDs later is a support ticket, not a settings toggle.
-2. Enroll as an **Individual** (fastest; the developer name shown on the App Store is your legal name) or as an **Organization** (shows a company name, but requires a D-U-N-S number and takes days to weeks longer).
-3. Pay the **$99/year** membership. It auto-renews; if it lapses, the app is removed from sale.
-4. Enable two-factor authentication on the Apple ID if it isn't already — Xcode and App Store Connect both require it.
-5. Wait for the "Welcome to the Apple Developer Program" email. Individual enrollment is often same-day; organization review can take a week or more.
-6. Sign in to <https://appstoreconnect.apple.com> once to accept the Paid Apps / Free Apps agreements under **Business → Agreements**. An unaccepted agreement silently blocks the app from going live at the very end, so do it now.
+Two things remain in this step, and both are **Account Holder actions** — nobody
+else on the team can do them, and each silently blocks release if skipped:
 
----
+- [ ] **Agreements.** App Store Connect → **Business** → **Agreements**. Accept the
+  Free Apps agreement. Paid Apps is only needed if the app is ever sold; it drags in
+  banking and tax forms, so skip it while the app is free.
+- [ ] **EU Digital Services Act trader information.** App Store Connect → **Business**
+  → **Trader Information** (also surfaced per-app under App Information). Supply
+  Plynth LLC's registered address, a phone number, and an email, then submit for
+  verification. Apple **removes apps from sale in the EU** without verified trader
+  status. Verification is not instant — start it before submitting the build, not after.
+
+This is the concrete payoff of publishing under the entity: the address Apple
+publishes to EU users is Plynth's registered address, not a home address.
 
 ## Step 2 — Create the app record in App Store Connect
 
@@ -50,17 +59,17 @@ You cannot create an App Store Connect record, sign for distribution, or use Tes
    - **Platform:** iOS
    - **Name:** `EFI Calculator` (30 characters max; must be unique across the App Store — if it's taken, `EFI Calculator — Endometriosis` or similar works, and the name here does not have to match `CFBundleDisplayName`)
    - **Primary language:** English (U.S.)
-   - **Bundle ID:** `ky.matus.efi`
+   - **Bundle ID:** `com.plynth.efi`
    - **SKU:** any private string, e.g. `efi-calculator-ios` (never shown to users)
    - **User access:** Full Access
-3. The Bundle ID dropdown only lists identifiers registered to your team. If `ky.matus.efi` isn't there, register it first at <https://developer.apple.com/account/resources/identifiers/list> → **+** → App IDs → App → Description `EFI Calculator`, Bundle ID (explicit) `ky.matus.efi`, no capabilities checked. Or let Xcode register it for you during Step 3 and come back.
+3. The Bundle ID dropdown only lists identifiers registered to your team. If `com.plynth.efi` isn't there, register it first at <https://developer.apple.com/account/resources/identifiers/list> → **+** → App IDs → App → Description `EFI Calculator`, Bundle ID (explicit) `com.plynth.efi`, no capabilities checked. Or let Xcode register it for you during Step 3 and come back.
 
 **Changing the bundle id is trivial right now, and impossible later.** Once an app record is created, its bundle id is permanent for that record. Before first submission, changing it takes two edits:
 
 1. `capacitor.config.ts` → `appId: 'your.new.id'`
 2. Xcode → App target → **Signing & Capabilities** → Bundle Identifier (this also writes `PRODUCT_BUNDLE_IDENTIFIER` in the project file; `cap sync` does **not** update it for you)
 
-then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from the TS config on every sync, so don't hand-edit it. Do this now if `ky.matus.efi` isn't the identity you want on the store forever.
+then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from the TS config on every sync, so don't hand-edit it. This was settled on 2026-08-20: `com.plynth.efi`, so that the identifier reverse-DNSes to a domain Plynth LLC owns rather than to a personal one. **Do not change it now** — it is already in the repo, and after first ship it is permanent.
 
 ---
 
@@ -70,7 +79,7 @@ then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from t
 2. Xcode → **Settings → Accounts → +** → Apple ID → sign in with the enrolled Apple ID. Your team appears once enrollment completes.
 3. Select the **App** target → **Signing & Capabilities** tab.
 4. Check **Automatically manage signing**, then pick your **Team** from the dropdown. The project already ships `CODE_SIGN_STYLE = Automatic`, so selecting the team is the only change; Xcode creates the development and distribution certificates and provisioning profiles for you.
-5. Confirm **Bundle Identifier** reads `ky.matus.efi` and the status area shows no red errors. "Failed to register bundle identifier" usually means someone else has claimed that id globally — change it per Step 2.
+5. Confirm **Bundle Identifier** reads `com.plynth.efi` and the status area shows no red errors. "Failed to register bundle identifier" usually means someone else has claimed that id globally — change it per Step 2.
 6. Plug in an iPhone, select it as the run destination, and **Run** (⌘R) once. Trust the developer certificate on the device when prompted (Settings → General → VPN & Device Management). Confirm the calculator loads and scores correctly, then put the phone in Airplane Mode and confirm it still works — that is the offline check, and it should pass because no asset is remote.
 
 ---
@@ -84,11 +93,7 @@ Keep this manual for v1. It is a five-minute path through the Xcode UI, and auto
 3. **Product → Archive.** Wait for the build.
 4. The **Organizer** window opens on the Archives tab with the new archive selected. Click **Distribute App**.
 5. Choose **App Store Connect** → **Upload** → **Next**. Accept the defaults on the following panes (include symbols, manage version and build number off), then **Upload**.
-6. **Export compliance:** the app uses no encryption beyond what iOS itself provides, so the answer is **No** when asked whether it uses non-exempt encryption. To stop being asked on every upload, add to `ios/App/App/Info.plist`:
-   ```xml
-   <key>ITSAppUsesNonExemptEncryption</key>
-   <false/>
-   ```
+6. **Export compliance:** already declared. `ios/App/App/Info.plist` carries `ITSAppUsesNonExemptEncryption = false`, which is accurate — the app uses no encryption beyond what iOS itself provides — so Xcode will not ask on upload.
 7. Upload takes a few minutes; processing on Apple's side takes 5–30 more. You'll get an email when the build finishes processing, and another if it fails validation.
 8. In App Store Connect → your app → **TestFlight**, the build appears. Add yourself under **Internal Testing** (any of up to 100 users on your team; no Apple review required, available within minutes). Install via the TestFlight app on the device.
 9. **External testers** — anyone not on your team — require a short **Beta App Review** and a "What to Test" note. Only bother if you want testers outside the team before release.
@@ -157,11 +162,11 @@ All of this goes in App Store Connect → your app → the **1.0 Prepare for Sub
 | Promotional text | 170 | Editable without a new build — good place for updates |
 | Description | 4000 | What it computes, the four steps (rASRM score → LF score → historical factors → EFI summary), the citation, and the disclaimer verbatim |
 | Keywords | 100 total, comma-separated, no spaces | e.g. `EFI,endometriosis,fertility,rASRM,AFS,infertility,IVF,laparoscopy,gynecology,OBGYN` |
-| Support URL | required | `https://github.com/merit-blake/efi-calculator` or the Pages site |
-| Marketing URL | optional | `https://merit-blake.github.io/efi-calculator` |
+| Support URL | required | `https://github.com/matusky/efi-calculator` or the Pages site |
+| Marketing URL | optional | `https://matusky.github.io/efi-calculator` |
 | Privacy policy URL | required | The page from Step 0 |
 | Category | — | Primary **Medical**; secondary **Reference** if you want one |
-| Copyright | — | e.g. `2026 <your name>` |
+| Copyright | — | `2026 Plynth LLC` |
 | Version | — | `1.0`, matching the archived build |
 | Release | — | "Automatically release" vs. "Manually release" — manual gives you control over the go-live moment |
 
