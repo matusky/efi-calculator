@@ -183,7 +183,7 @@ Required per device family the app supports. The project currently targets **iPh
 
 App Store Connect scales these down for smaller devices automatically, so those two sets cover the whole catalog. Confirm the exact accepted dimensions on the upload page — Apple revises the required sizes when new hardware ships.
 
-Easiest capture path: run the app in the **iOS Simulator** on an iPhone 6.9"-class device and an iPad Pro 13", then **File → Save Screen Shot** (⌘S), which writes a correctly sized PNG to the Desktop. No status-bar cleanup is needed; the simulator's status bar is already neutral.
+**Both sets are already generated and committed** under `assets/screenshots/`, at the exact accepted pixel sizes, showing a worked Stage III case that scores EFI 7/10. Upload them as-is. To regenerate after a UI change, run `./scripts/screenshots.sh` — it builds the app, drives a copy of the bundle through the worksheet, and captures each section on both device classes.
 
 Suggested three to five shots, which double as a walkthrough of what the app does:
 
