@@ -11,6 +11,7 @@ on:
     paths:
       - "www/**"
       - "ios/**"
+      - "test/**"
       - "capacitor.config.ts"
       - "package.json"
       - "package-lock.json"
@@ -19,6 +20,7 @@ on:
     paths:
       - "www/**"
       - "ios/**"
+      - "test/**"
       - "capacitor.config.ts"
       - "package.json"
       - "package-lock.json"
@@ -30,8 +32,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The scoring rules are the part of this app that can be wrong without anyone
+  # noticing, so they gate the expensive macOS build rather than running beside it.
+  scoring:
+    name: EFI scoring tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run scoring tests
+        run: npm test
+
   build:
     name: Simulator smoke build
+    needs: scoring
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5

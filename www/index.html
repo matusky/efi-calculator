@@ -52,6 +52,10 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
 .lf-grid th,.lf-grid td{padding:.5rem .4rem;text-align:center;border:1px solid var(--border)}
 .lf-grid th{background:var(--accent-light);font-weight:600}
 .lf-grid td:first-child{text-align:left;font-weight:500}
+.lf-absent{display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;margin:.6rem 0 0;font-size:.82rem;color:var(--muted)}
+.lf-absent label{display:flex;align-items:center;gap:.35rem;cursor:pointer}
+.lf-absent-note{flex-basis:100%;font-size:.75rem;margin:.15rem 0 0;line-height:1.35}
+.lf-side-off{opacity:.4}
 .lf-mapping{margin:.5rem 0;font-size:.85rem}
 .lf-mapping table{border-collapse:collapse;width:100%}
 .lf-mapping th,.lf-mapping td{padding:.35rem .5rem;border:1px solid var(--border);text-align:center}
@@ -95,8 +99,8 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
 .col-left .checkbox-row{font-size:.78rem;margin:.25rem 0}
 
 /* Right column: restore radio-group defaults for LF grid */
-.col-right .lf-grid .radio-group{gap:.4rem}
-.col-right .lf-grid .radio-label{font-size:.82rem;padding:.3rem .5rem;min-width:32px}
+.col-right .lf-grid .radio-group{gap:.3rem;flex-wrap:nowrap;justify-content:center}
+.col-right .lf-grid .radio-label{font-size:.8rem;padding:.3rem .4rem;min-width:28px;flex:0 0 auto}
 .col-right .hist-question .radio-group{gap:.5rem}
 .col-right .hist-question .radio-label{font-size:.84rem;padding:.35rem .6rem}
 
@@ -106,6 +110,8 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
 }
 @media(max-width:600px){
   .section{padding:.75rem}
+  .lf-grid .radio-group{gap:.25rem;flex-wrap:nowrap;justify-content:center}
+  .lf-grid .radio-label{font-size:.78rem;padding:.28rem .35rem;min-width:26px;flex:0 0 auto}
   table.score-table{font-size:.75rem}
   table.score-table th,table.score-table td{padding:.3rem .2rem}
   .scorecard{font-size:.78rem;padding:.75rem}
@@ -314,7 +320,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
       <span class="step-badge">Step 2</span>
       <h2>Least Function (LF) Score</h2>
     </div>
-    <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem">Rate each structure: 4 = Normal, 2 = Moderate dysfunction, 1 = Severe dysfunction, 0 = Absent/nonfunctional</p>
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem">Rate each structure at the conclusion of surgery: 4 = Normal, 3 = Mild dysfunction, 2 = Moderate dysfunction, 1 = Severe dysfunction, 0 = Absent/nonfunctional</p>
 
     <table class="lf-grid">
       <tr><th></th><th>LEFT</th><th>RIGHT</th></tr>
@@ -325,6 +331,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_l_tube" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_l_tube" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_l_tube" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_l_tube" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_l_tube" value="4"> 4</label>
           </div>
         </td>
@@ -333,6 +340,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_r_tube" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_r_tube" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_r_tube" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_r_tube" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_r_tube" value="4"> 4</label>
           </div>
         </td>
@@ -344,6 +352,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_l_fim" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_l_fim" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_l_fim" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_l_fim" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_l_fim" value="4"> 4</label>
           </div>
         </td>
@@ -352,6 +361,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_r_fim" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_r_fim" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_r_fim" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_r_fim" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_r_fim" value="4"> 4</label>
           </div>
         </td>
@@ -363,6 +373,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_l_ov" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_l_ov" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_l_ov" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_l_ov" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_l_ov" value="4"> 4</label>
           </div>
         </td>
@@ -371,31 +382,38 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
             <label class="radio-label"><input type="radio" name="lf_r_ov" value="0"> 0</label>
             <label class="radio-label"><input type="radio" name="lf_r_ov" value="1"> 1</label>
             <label class="radio-label"><input type="radio" name="lf_r_ov" value="2"> 2</label>
+            <label class="radio-label"><input type="radio" name="lf_r_ov" value="3"> 3</label>
             <label class="radio-label"><input type="radio" name="lf_r_ov" value="4"> 4</label>
           </div>
         </td>
       </tr>
     </table>
 
+    <div class="lf-absent">
+      <label><input type="checkbox" id="lf_l_absent"> Left ovary absent</label>
+      <label><input type="checkbox" id="lf_r_absent"> Right ovary absent</label>
+      <p class="lf-absent-note">With one ovary absent, the LF score doubles the lowest score on the remaining side.</p>
+    </div>
+
     <div style="display:flex;gap:1rem;flex-wrap:wrap;margin:.75rem 0">
       <div class="result-box" style="flex:1;min-width:200px">
-        <span class="label">Left Subtotal</span>
+        <span class="label">Left (lowest)</span>
         <span class="value" id="lf-left">—</span>
       </div>
       <div class="result-box" style="flex:1;min-width:200px">
-        <span class="label">Right Subtotal</span>
+        <span class="label">Right (lowest)</span>
         <span class="value" id="lf-right">—</span>
       </div>
     </div>
     <div class="result-box" style="background:var(--section-bg)">
-      <span class="label">LF Score (least functional side)</span>
+      <span class="label">LF Score (left lowest + right lowest)</span>
       <span class="value" id="lf-score">—</span>
     </div>
 
     <div class="lf-mapping">
       <table>
         <tr><th>LF Score</th><th>Function</th><th>EFI Points</th></tr>
-        <tr id="lf-row-3"><td>7–12</td><td>High</td><td>3 pts</td></tr>
+        <tr id="lf-row-3"><td>7–8</td><td>High</td><td>3 pts</td></tr>
         <tr id="lf-row-2"><td>4–6</td><td>Moderate</td><td>2 pts</td></tr>
         <tr id="lf-row-1"><td>1–3</td><td>Low</td><td>1 pt</td></tr>
         <tr id="lf-row-0"><td>0</td><td>None</td><td>0 pts</td></tr>
@@ -497,6 +515,7 @@ table.score-table .score-box input[type=radio]{position:absolute;opacity:0;width
 
 </div><!-- /page-wrap -->
 
+<script src="efi.js"></script>
 <script>
 // Utility: get selected radio value or null
 function rv(name) {
@@ -511,7 +530,7 @@ function calculate() {
   implantNames.forEach(n => { const v = rv(n); if (v !== null) afsEndo += v; });
   document.getElementById('afs-endo').textContent = afsEndo;
 
-  const endoPt = afsEndo < 16 ? 1 : 0;
+  const endoPt = EFI.endometriosisPoints(afsEndo);
   document.getElementById('endo-efi-pt').textContent = endoPt + ' pt';
 
   // 1B: Adhesions
@@ -542,99 +561,88 @@ function calculate() {
   const afsTotal = afsEndo + adhTotal;
   document.getElementById('afs-total').textContent = afsTotal;
 
-  const totalPt = afsTotal < 71 ? 1 : 0;
+  const totalPt = EFI.totalScorePoints(afsTotal);
   document.getElementById('total-efi-pt').textContent = totalPt + ' pt';
 
   // Stage
-  let stageText = '—';
-  if (afsTotal > 0) {
-    if (afsTotal <= 5) stageText = 'I (Minimal)';
-    else if (afsTotal <= 15) stageText = 'II (Mild)';
-    else if (afsTotal <= 40) stageText = 'III (Moderate)';
-    else stageText = 'IV (Severe)';
-  }
+  const stageText = EFI.rasrmStage(afsTotal) || '—';
   document.getElementById('stage').textContent = stageText;
 
-  // Section 2: LF Score
-  const lfLTube = rv('lf_l_tube'), lfLFim = rv('lf_l_fim'), lfLOv = rv('lf_l_ov');
-  const lfRTube = rv('lf_r_tube'), lfRFim = rv('lf_r_fim'), lfROv = rv('lf_r_ov');
+  // Section 2: LF Score — delegated to efi.js so the worksheet and the test
+  // suite compute it the same way.
+  const lAbsent = document.getElementById('lf_l_absent').checked;
+  const rAbsent = document.getElementById('lf_r_absent').checked;
 
-  const lLeft = (lfLTube !== null && lfLFim !== null && lfLOv !== null) ? lfLTube + lfLFim + lfLOv : null;
-  const lRight = (lfRTube !== null && lfRFim !== null && lfROv !== null) ? lfRTube + lfRFim + lfROv : null;
+  const lfInput = {
+    left: lAbsent ? { ovaryAbsent: true }
+                  : { tube: rv('lf_l_tube'), fimbria: rv('lf_l_fim'), ovary: rv('lf_l_ov') },
+    right: rAbsent ? { ovaryAbsent: true }
+                   : { tube: rv('lf_r_tube'), fimbria: rv('lf_r_fim'), ovary: rv('lf_r_ov') }
+  };
 
-  document.getElementById('lf-left').textContent = lLeft !== null ? lLeft : '—';
-  document.getElementById('lf-right').textContent = lRight !== null ? lRight : '—';
+  // Grey out a side whose ovary is gone: its ratings no longer contribute.
+  document.querySelectorAll('.lf-grid td:nth-child(2)').forEach(td => td.classList.toggle('lf-side-off', lAbsent));
+  document.querySelectorAll('.lf-grid td:nth-child(3)').forEach(td => td.classList.toggle('lf-side-off', rAbsent));
 
-  let lfScore = null;
-  if (lLeft !== null && lRight !== null) {
-    lfScore = Math.min(lLeft, lRight);
-    const side = lLeft <= lRight ? 'Left' : 'Right';
-    document.getElementById('lf-score').textContent = lfScore + ' (' + side + ')';
-  } else if (lLeft !== null) {
-    lfScore = lLeft;
-    document.getElementById('lf-score').textContent = lfScore + ' (Left only)';
-  } else if (lRight !== null) {
-    lfScore = lRight;
-    document.getElementById('lf-score').textContent = lfScore + ' (Right only)';
-  } else {
-    document.getElementById('lf-score').textContent = '—';
+  const hist = {
+    age: rv('hist_age'),
+    yearsInfertile: rv('hist_inf'),
+    priorPregnancy: rv('hist_preg')
+  };
+
+  const result = EFI.efi({
+    leastFunction: lfInput,
+    afsEndoScore: afsEndo,
+    afsTotalScore: afsTotal,
+    historical: hist
+  });
+
+  const lf = result.leastFunction;
+  const dash = v => (v === null || v === undefined) ? '—' : v;
+
+  document.getElementById('lf-left').textContent = lAbsent ? 'ovary absent' : dash(lf.leftLeast);
+  document.getElementById('lf-right').textContent = rAbsent ? 'ovary absent' : dash(lf.rightLeast);
+
+  let lfText = '—';
+  if (lf.score !== null) {
+    lfText = String(lf.score);
+    if (lf.doubledSide) lfText += ' (' + lf.doubledSide + ' doubled)';
   }
+  document.getElementById('lf-score').textContent = lfText;
 
-  // LF → EFI pts
-  let lfPts = null;
+  const lfPts = result.lfPoints;
   document.querySelectorAll('.lf-mapping tr').forEach(r => r.classList.remove('active'));
-  if (lfScore !== null) {
-    if (lfScore >= 7) { lfPts = 3; document.getElementById('lf-row-3').classList.add('active'); }
-    else if (lfScore >= 4) { lfPts = 2; document.getElementById('lf-row-2').classList.add('active'); }
-    else if (lfScore >= 1) { lfPts = 1; document.getElementById('lf-row-1').classList.add('active'); }
-    else { lfPts = 0; document.getElementById('lf-row-0').classList.add('active'); }
-  }
+  if (lfPts !== null) document.getElementById('lf-row-' + lfPts).classList.add('active');
 
   // Section 3: Historical
-  const hAge = rv('hist_age'), hInf = rv('hist_inf'), hPreg = rv('hist_preg');
-  const histTotal = (hAge !== null ? hAge : 0) + (hInf !== null ? hInf : 0) + (hPreg !== null ? hPreg : 0);
-  const histComplete = hAge !== null && hInf !== null && hPreg !== null;
-  document.getElementById('hist-total').textContent = histComplete ? histTotal : '—';
+  const histComplete = result.historical !== null;
+  document.getElementById('hist-total').textContent = dash(result.historical);
 
   // Section 4: Scorecard
-  document.getElementById('sc-age').textContent = hAge !== null ? hAge + ' pts' : '— pts';
-  document.getElementById('sc-inf').textContent = hInf !== null ? hInf + ' pts' : '— pts';
-  document.getElementById('sc-preg').textContent = hPreg !== null ? hPreg + ' pts' : '— pts';
-  document.getElementById('sc-hist-sub').textContent = histComplete ? histTotal + ' / 5' : '— / 5';
+  document.getElementById('sc-age').textContent = hist.age !== null ? hist.age + ' pts' : '— pts';
+  document.getElementById('sc-inf').textContent = hist.yearsInfertile !== null ? hist.yearsInfertile + ' pts' : '— pts';
+  document.getElementById('sc-preg').textContent = hist.priorPregnancy !== null ? hist.priorPregnancy + ' pts' : '— pts';
+  document.getElementById('sc-hist-sub').textContent = histComplete ? result.historical + ' / 5' : '— / 5';
 
-  document.getElementById('sc-lf-raw').textContent = lfScore !== null ? lfScore : '—';
-  document.getElementById('sc-lf-pts').textContent = lfPts !== null ? lfPts : '—';
+  document.getElementById('sc-lf-raw').textContent = dash(lf.score);
+  document.getElementById('sc-lf-pts').textContent = dash(lfPts);
   document.getElementById('sc-endo-raw').textContent = afsEndo;
   document.getElementById('sc-endo-pts').textContent = endoPt;
   document.getElementById('sc-total-raw').textContent = afsTotal;
   document.getElementById('sc-total-pts').textContent = totalPt;
 
-  const surgSub = (lfPts !== null ? lfPts : 0) + endoPt + totalPt;
-  const surgComplete = lfPts !== null;
-  document.getElementById('sc-surg-sub').textContent = surgComplete ? surgSub + ' / 5' : '— / 5';
-
-  const allComplete = histComplete && surgComplete;
-  let efiTotal = null;
-  if (allComplete) {
-    efiTotal = histTotal + surgSub;
-    document.getElementById('sc-efi-total').textContent = efiTotal + ' / 10';
-  } else {
-    document.getElementById('sc-efi-total').textContent = '— / 10';
-  }
+  document.getElementById('sc-surg-sub').textContent =
+    result.surgical !== null ? result.surgical + ' / 5' : '— / 5';
+  document.getElementById('sc-efi-total').textContent =
+    result.total !== null ? result.total + ' / 10' : '— / 10';
 
   document.getElementById('sc-stage').textContent = stageText;
 
   // Pregnancy rate highlight
-  const prIds = ['pr-910','pr-78','pr-6','pr-5','pr-4','pr-03'];
-  prIds.forEach(id => document.getElementById(id).classList.remove('active'));
-  if (efiTotal !== null) {
-    if (efiTotal >= 9) document.getElementById('pr-910').classList.add('active');
-    else if (efiTotal >= 7) document.getElementById('pr-78').classList.add('active');
-    else if (efiTotal === 6) document.getElementById('pr-6').classList.add('active');
-    else if (efiTotal === 5) document.getElementById('pr-5').classList.add('active');
-    else if (efiTotal === 4) document.getElementById('pr-4').classList.add('active');
-    else document.getElementById('pr-03').classList.add('active');
-  }
+  const bandRow = { '9-10': 'pr-910', '7-8': 'pr-78', '6': 'pr-6', '5': 'pr-5', '4': 'pr-4', '0-3': 'pr-03' };
+  Object.values(bandRow).forEach(id => document.getElementById(id).classList.remove('active'));
+  const band = EFI.pregnancyBand(result.total);
+  if (band) document.getElementById(bandRow[band]).classList.add('active');
 }
 
 function resetAll() {
@@ -651,6 +659,8 @@ function resetAll() {
   });
   document.getElementById('rt_fim').checked = false;
   document.getElementById('lt_fim').checked = false;
+  document.getElementById('lf_l_absent').checked = false;
+  document.getElementById('lf_r_absent').checked = false;
   calculate();
 }
 

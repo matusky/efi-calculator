@@ -4,6 +4,7 @@
   "private": true,
   "description": "Endometriosis Fertility Index (EFI) calculator worksheet",
   "scripts": {
+    "test": "node --test \"test/*.test.js\"",
     "sync": "cap sync ios",
     "open:ios": "cap open ios"
   },
