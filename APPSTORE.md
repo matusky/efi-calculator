@@ -26,7 +26,7 @@ These shipped with the app-feasibility branch; each just needs a glance before s
 
 - [x] **In-app disclaimer.** `www/index.html` shows a short disclaimer line directly under the header ("Informational tool — not medical advice…") and the full README disclaimer paragraph at the bottom of the page. Guideline 1.4.1 expects medical apps to state their limits inside the app; both are visible to a reviewer, the header line without any scrolling.
 - [x] **App artwork.** The icon and splash screens are the custom EFI wordmark (white Georgia "EFI" on navy `#1e2a35`), not Capacitor templates: `AppIcon.appiconset/AppIcon-512@2x.png` (1024×1024, no alpha) plus six `Splash.imageset/Default@{1,2,3}x~universal~anyany[-dark].png` (2732×2732, light and dark). Regeneration pipeline: `assets/source/generate.sh` → `npx capacitor-assets generate --ios` (needs macOS with Chrome + ImageMagick).
-- [x] **Privacy policy page.** `www/privacy.html` exists and states truthfully that nothing is collected, stored, or transmitted. The Pages workflow publishes `www/` as-is, so after the branch merges to `main` it is live at `https://matusky.github.io/efi-calculator/privacy.html` — confirm that URL loads before pasting it into App Store Connect.
+- [x] **Privacy policy page.** `www/privacy.html` exists and states truthfully that nothing is collected, stored, or transmitted. The Pages workflow publishes `www/` as-is, so after the branch merges to `main` it is live at `https://eficalculator.com/privacy.html` — confirm that URL loads before pasting it into App Store Connect.
 
 **iPad stays in for v1** (decided 2026-08-20) — the worksheet is a two-column layout that earns the width. `TARGETED_DEVICE_FAMILY = "1,2"`, so both screenshot sets are mandatory; both are already generated and committed (see Step 8), so this costs nothing at submission time.
 
@@ -184,7 +184,7 @@ All of this goes in App Store Connect → your app → the **1.0 Prepare for Sub
 | Description | 4000 | What it computes, the four steps (rASRM score → LF score → historical factors → EFI summary), the citation, and the disclaimer verbatim |
 | Keywords | 100 total, comma-separated, no spaces | e.g. `EFI,endometriosis,fertility,rASRM,AFS,infertility,IVF,laparoscopy,gynecology,OBGYN` |
 | Support URL | required | `https://github.com/matusky/efi-calculator` or the Pages site |
-| Marketing URL | optional | `https://matusky.github.io/efi-calculator` |
+| Marketing URL | optional | `https://eficalculator.com` |
 | Privacy policy URL | required | The page from Step 0 |
 | Category | — | Primary **Medical**; secondary **Reference** if you want one |
 | Copyright | — | `2026 Plynth LLC` |
