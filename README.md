@@ -2,7 +2,7 @@
 
 A simple, mobile-friendly **Endometriosis Fertility Index (EFI)** calculator built as a single HTML page. No server, no dependencies — just open it in a browser.
 
-🔗 **Live tool:** [matusky.github.io/efi-calculator](https://matusky.github.io/efi-calculator)
+🔗 **Live tool:** [eficalculator.com](https://eficalculator.com)
 
 ---
 
@@ -28,7 +28,7 @@ Everything calculates in real time as you make selections. A reset button clears
 
 ## How to Use It
 
-1. Open the calculator (either the [live site](https://matusky.github.io/efi-calculator) or the local file)
+1. Open the calculator (either the [live site](https://eficalculator.com) or the local file)
 2. **Step 1** — Work through the rASRM scoring tables. For each anatomical site, select the implant size and adhesion extent observed during surgery. Check the "fimbriated end completely enclosed" box for either tube if applicable.
 3. **Step 2** — Rate each structure (tube, fimbria, ovary) on both sides: 4 = normal, 3 = mild dysfunction, 2 = moderate, 1 = severe, 0 = absent/nonfunctional. The tool takes the lowest rating on each side and adds the two together. If an ovary is absent, tick the box for that side — the score then doubles the lowest rating on the remaining side, per the published rule.
 4. **Step 3** — Select the patient's age bracket, duration of infertility, and whether there's been a prior pregnancy.
@@ -98,7 +98,26 @@ the input space. It also pins two corrections made on 2026-08-20:
 
 ## Deployment
 
-The site auto-deploys to **GitHub Pages** on every push to `main` via the workflow in `.github/workflows/pages.yml`. No build step — it publishes the `www/` directory as-is.
+The site auto-deploys to **GitHub Pages** on every push to `main` via the workflow in
+`.github/workflows/pages.yml`. No build step — it publishes the `www/` directory as-is.
+
+It serves from the custom domain **eficalculator.com**, set by `www/CNAME`. That is
+deliberate rather than cosmetic: **GitHub Pages URLs do not redirect when a repository
+is transferred** — the old one simply 404s. The privacy policy URL is a required field
+in App Store Connect and must keep resolving for the life of the listing, so the public
+URLs cannot be allowed to depend on which account owns the repo.
+
+Consequences worth knowing:
+
+- The apex `A`/`AAAA` records point at GitHub's shared Pages IPs, which are the same for
+  every account, so they survive a transfer untouched. The `CNAME` file travels with the
+  repo. Only two things need attention if the repo moves: re-confirm the custom domain in
+  the new owner's Pages settings, and repoint the `www` `CNAME` record, which is the one
+  record that names an owner.
+- DNS is intentionally **not** proxied through Cloudflare. Proxying blocks GitHub from
+  validating the domain and issuing its certificate, which breaks Enforce HTTPS.
+- The **support** URL still points at `github.com/matusky/efi-calculator`. That is safe —
+  GitHub *repository* URLs do redirect after a transfer. Only Pages URLs do not.
 
 ## iOS App
 
