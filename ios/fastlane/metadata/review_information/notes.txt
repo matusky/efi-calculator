@@ -1,0 +1,13 @@
+EFI Calculator is an offline reference calculator for the Endometriosis Fertility Index, a published clinical scoring system (Adamson GD & Pasta DJ, "Endometriosis Fertility Index: Clinical applicability and validity of a simplified scoring system," Fertil Steril 2010;94(5):1609-15), used together with the revised AFS/rASRM classification.
+
+INTENDED USER: qualified healthcare professionals — the gynecologic surgeon performing or reviewing a laparoscopy. The app is a scoring worksheet, not a diagnostic tool and not a medical device.
+
+WHAT IT DOES: the user enters findings already observed during surgery — implant sizes and depths, adhesion extent, and the functional status of the tubes, fimbriae and ovaries — plus patient age, duration of infertility, and prior pregnancy history. The app performs arithmetic on those inputs to produce the rASRM stage, the Least Function score, and the 0-10 EFI total, and displays the published population-level pregnancy-rate table from the source paper. Every intermediate value is shown on the scorecard so the user can independently review the basis for the result. It makes no diagnosis and gives no treatment recommendation.
+
+DISCLAIMER: displayed in the app header, visible immediately on launch without scrolling ("Informational tool - not medical advice. Consult a qualified healthcare provider."), and again in full at the foot of the worksheet.
+
+NO ACCOUNT REQUIRED: there is no sign-in, so no demo credentials are needed.
+
+PRIVACY: the app runs entirely offline. All assets are bundled and it makes no network requests of any kind. It stores no data - entries exist only for the duration of the session and are discarded when the app closes.
+
+HOW TO EXERCISE IT: tap any score box in Step 1 to build an rASRM score; rate the six structures in Step 2; choose the three answers in Step 3. The Step 4 scorecard fills in as you go and highlights the matching pregnancy-rate row.

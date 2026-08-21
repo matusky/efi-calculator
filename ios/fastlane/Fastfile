@@ -1,0 +1,177 @@
+# Build, sign, upload and submit EFI Calculator, published by Plynth LLC.
+#
+#   bundle exec fastlane beta      -> TestFlight
+#   bundle exec fastlane release   -> App Store metadata + screenshots + submit
+#
+# Signing uses fastlane match: one distribution certificate and app-store profile
+# stored encrypted in a private certs repo. Automatic signing mints a fresh
+# distribution cert per machine, and Apple caps a team at a small number of them,
+# so on ephemeral CI runners it works for the first few builds and then stops.
+#
+# Nothing secret lives in this repo. Every credential arrives as an environment
+# variable from GitHub Actions secrets — see ios/TESTFLIGHT.md.
+#
+# NOTE ON TEAMS: Plynth LLC is a different Apple team from the personal one that
+# publishes bin, so this needs its own App Store Connect API key, its own Team ID
+# and its own certs repo. bin's secrets do not work here.
+
+default_platform(:ios)
+
+APP_IDENTIFIER = "com.plynth.efi".freeze
+XCODE_PROJECT = "App/App.xcodeproj".freeze
+SCHEME = "App".freeze
+
+# The repo root, one level up from ios/ where fastlane runs.
+def repo_root
+  File.expand_path("../..", __dir__)
+end
+
+# Marketing version is single-sourced from package.json so the App Store version
+# always matches the shipped repo release. CFBundleShortVersionString allows at
+# most three integers, so take the first three components.
+def marketing_version
+  require "json"
+  raw = JSON.parse(File.read(File.join(repo_root, "package.json")))["version"].to_s.strip
+  version = raw.split(".").first(3).join(".")
+
+  # Fail here rather than 25 minutes later at upload, after a build number has
+  # already been burned. This also blocks xcargs token injection from a version
+  # string containing spaces, since it is interpolated unquoted below.
+  unless version =~ /\A(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,2}\z/
+    UI.user_error!("Invalid marketing version #{version.inspect} derived from package.json " \
+      "version #{raw.inspect}: must be 1-3 dot-separated non-negative integers, no leading zeros.")
+  end
+  version
+end
+
+def asc_api_key
+  app_store_connect_api_key(
+    key_id: ENV.fetch("ASC_KEY_ID"),
+    issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+    key_content: ENV.fetch("ASC_KEY_P8"),
+    is_key_content_base64: false,
+    in_house: false
+  )
+end
+
+# Copy www/ into the app bundle. The native project ships no web assets of its
+# own — ios/App/App/public is generated and untracked — so a CI checkout has to
+# sync before it can build anything.
+def capacitor_sync!
+  Dir.chdir(repo_root) do
+    sh("npm ci")
+    sh("npx cap sync ios")
+  end
+  index = File.join(repo_root, "ios/App/App/public/index.html")
+  UI.user_error!("cap sync did not produce #{index}") unless File.exist?(index)
+end
+
+# Everything shared by beta and release: sync, sign, build an .ipa.
+def build!(api_key, team_id, build_number)
+  capacitor_sync!
+
+  # match creates the cert and profile on the first run and reuses them after.
+  # force: regenerates the profile each run so it always reflects current
+  # entitlements — this app declares none today, but a future capability then
+  # needs no manual portal toggle.
+  match(type: "appstore", api_key: api_key, readonly: false, force: true, team_id: team_id)
+
+  update_code_signing_settings(
+    path: XCODE_PROJECT,
+    targets: [SCHEME],
+    use_automatic_signing: false,
+    team_id: team_id,
+    bundle_identifier: APP_IDENTIFIER,
+    code_sign_identity: "Apple Distribution",
+    profile_name: "match AppStore #{APP_IDENTIFIER}"
+  )
+
+  version = marketing_version
+  UI.message("Building #{version} (#{build_number})")
+
+  build_app(
+    project: XCODE_PROJECT,
+    scheme: SCHEME,
+    export_method: "app-store",
+    output_directory: "build",
+    clean: true,
+    xcargs: "MARKETING_VERSION=#{version} CURRENT_PROJECT_VERSION=#{build_number}",
+    export_options: {
+      method: "app-store",
+      provisioningProfiles: { APP_IDENTIFIER => "match AppStore #{APP_IDENTIFIER}" }
+    }
+  )
+  version
+end
+
+platform :ios do
+  # Create the App Store Connect record if it is not there yet. Idempotent — a
+  # no-op once the app exists, which is the steady state.
+  desc "Create the App Store Connect app record (idempotent)"
+  lane :bootstrap do
+    team_id = ENV.fetch("APPLE_TEAM_ID")
+    begin
+      produce(
+        app_identifier: APP_IDENTIFIER,
+        app_name: "EFI Calculator",
+        language: "English",
+        team_id: team_id,
+        sku: "efi-calculator-ios"
+      )
+    rescue => e
+      UI.important("produce skipped (the app record most likely already exists): #{e.message}")
+    end
+  end
+
+  desc "Build and upload a TestFlight build"
+  lane :beta do
+    setup_ci # temporary keychain; without it codesign waits on a GUI prompt that never comes
+    api_key = asc_api_key
+    team_id = ENV.fetch("APPLE_TEAM_ID")
+    build!(api_key, team_id, ENV["BUILD_NUMBER"] || "1")
+    upload_to_testflight(api_key: api_key, skip_waiting_for_build_processing: true)
+  end
+
+  # Metadata and screenshots come from fastlane/metadata and fastlane/screenshots,
+  # so a release is a reviewed diff rather than a person retyping App Store fields
+  # into a browser.
+  desc "Build, upload, attach metadata and screenshots, and submit for review"
+  lane :release do
+    setup_ci
+    api_key = asc_api_key
+    team_id = ENV.fetch("APPLE_TEAM_ID")
+    version = build!(api_key, team_id, ENV["BUILD_NUMBER"] || "1")
+
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: APP_IDENTIFIER,
+      app_version: version,
+      submit_for_review: true,
+      automatic_release: false, # you choose the go-live moment
+      force: true,              # skip the HTML preview prompt; CI has no tty
+      precheck_include_in_app_purchases: false,
+      submission_information: {
+        # No encryption beyond what iOS itself provides; also declared in
+        # Info.plist as ITSAppUsesNonExemptEncryption.
+        export_compliance_uses_encryption: false,
+        # No ads, no tracking, nothing collected.
+        add_id_info_uses_idfa: false,
+        content_rights_contains_third_party_content: false
+      }
+    )
+  end
+
+  # Push metadata and screenshots without building or submitting. Useful for a
+  # description or screenshot fix between releases.
+  desc "Update App Store metadata and screenshots only"
+  lane :metadata_only do
+    upload_to_app_store(
+      api_key: asc_api_key,
+      app_identifier: APP_IDENTIFIER,
+      skip_binary_upload: true,
+      submit_for_review: false,
+      force: true,
+      precheck_include_in_app_purchases: false
+    )
+  end
+end

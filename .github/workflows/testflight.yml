@@ -1,0 +1,100 @@
+name: Ship iOS
+
+# Build, sign and ship EFI Calculator to TestFlight or the App Store. Manual
+# trigger, because a release should be a decision rather than a side effect of a
+# merge. Signing uses fastlane match — see ios/TESTFLIGHT.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "What to do"
+        required: true
+        default: beta
+        type: choice
+        options:
+          - bootstrap      # create the App Store Connect record, nothing else
+          - beta           # build + upload to TestFlight
+          - metadata_only  # push metadata and screenshots, no build
+          - release        # build + upload + metadata + submit for review
+  # Tag-only, never plain pushes to main — a merge should not burn a build number.
+  push:
+    tags:
+      - "ios-v*"
+
+concurrency:
+  group: ship-ios
+  cancel-in-progress: false
+
+jobs:
+  ship:
+    name: ${{ inputs.lane || 'beta' }}
+    # Apple rejects uploads built against an older SDK than the current release.
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      BUILD_NUMBER: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # Fail in seconds with a named secret rather than fifteen minutes later
+      # inside fastlane with a stack trace.
+      - name: Verify required secrets are set
+        env:
+          MATCH_GIT_PAT: ${{ secrets.MATCH_GIT_PAT }}
+        run: |
+          missing=0
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8 APPLE_TEAM_ID MATCH_PASSWORD MATCH_GIT_PAT; do
+            if [ -z "${!v}" ]; then echo "::error::Missing secret: $v"; missing=1; fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Add the secrets per ios/TESTFLIGHT.md, then re-run."
+            exit 1
+          fi
+
+      - name: Configure match git auth
+        env:
+          MATCH_GIT_PAT: ${{ secrets.MATCH_GIT_PAT }}
+        run: |
+          AUTH=$(printf '%s' "merit-blake:$MATCH_GIT_PAT" | base64 | tr -d '\n')
+          echo "MATCH_GIT_BASIC_AUTHORIZATION=$AUTH" >> "$GITHUB_ENV"
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: ios
+
+      # The scoring rules gate the release, exactly as they gate a PR. Shipping a
+      # medical calculator whose arithmetic is wrong is the failure that matters.
+      - name: Run scoring tests
+        run: npm test
+
+      - name: Run lane
+        working-directory: ios
+        run: bundle exec fastlane ${{ inputs.lane || 'beta' }}
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastlane-logs
+          path: |
+            ~/Library/Logs/gym
+            ios/build
+          if-no-files-found: ignore
+          retention-days: 7

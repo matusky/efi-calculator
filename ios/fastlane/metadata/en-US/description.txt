@@ -1,0 +1,28 @@
+EFI Calculator scores the Endometriosis Fertility Index from the findings a surgeon records during laparoscopy, alongside the revised AFS/rASRM stage the same findings produce.
+
+It is a worksheet, not a diagnostic. You enter what was observed; it does the arithmetic and shows every intermediate number, so the result can be checked line by line rather than taken on trust.
+
+THE FOUR STEPS
+
+1. rASRM Endometriosis Score — implant size and depth at the peritoneum, both ovaries and the posterior cul-de-sac, plus filmy and dense adhesions on the ovaries and tubes. Produces the AFS endometriosis lesion score, the AFS total score, and the rASRM stage (I–IV).
+
+2. Least Function Score — rate the fallopian tube, fimbria and ovary on each side from 4 (normal) through 3 (mild), 2 (moderate) and 1 (severe dysfunction) to 0 (absent or nonfunctional). The LF score is the lowest rating on the left plus the lowest on the right. If an ovary is absent, the score doubles the lowest rating on the remaining side, as the published method specifies.
+
+3. Historical Factors — age at surgery, length of infertility, and prior pregnancy.
+
+4. EFI Summary — a full scorecard showing how each of the ten points was earned, the total, and the matching row of published non-ART pregnancy rates at one and three years.
+
+BUILT FOR THE OPERATING ROOM
+
+• Works completely offline. Every asset is in the app; it makes no network requests at all.
+• Collects nothing. No account, no sign-in, no analytics, no tracking, no storage — entries live only for the session and are gone when the app closes.
+• Recalculates as you go, so a changed finding updates the stage and the score immediately.
+• Reads on iPhone and iPad, with the worksheet in two columns where there is room for it.
+
+METHOD
+
+Adamson GD & Pasta DJ. Endometriosis Fertility Index: Clinical applicability and validity of a simplified scoring system. Fertil Steril 2010;94(5):1609–15. Staging follows the revised AFS/rASRM Classification System.
+
+IMPORTANT
+
+This is an informational tool, not a medical device. It does not provide medical advice, diagnosis, or treatment. It is intended for use by qualified healthcare professionals who can independently review the basis for its output. Always consult a qualified healthcare provider for clinical decision-making. The pregnancy rate estimates are population-level statistics from published research and may not reflect an individual outcome.
