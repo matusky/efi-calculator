@@ -32,6 +32,27 @@ These shipped with the app-feasibility branch; each just needs a glance before s
 
 ---
 
+## Step 0.5 — Turn on the custom domain (one click, needs repo admin)
+
+The DNS is already in place: `eficalculator.com` points at GitHub's Pages IPs, and every
+URL in this repo and in the App Store metadata already says `eficalculator.com`.
+
+One thing remains, and it needs **admin on the repository**, which the automation does
+not have:
+
+> **Settings → Pages → Custom domain → enter `eficalculator.com` → Save.**
+> Then tick **Enforce HTTPS** once the certificate finishes provisioning (a few minutes).
+
+This site publishes through a GitHub Actions workflow, and `actions/deploy-pages`
+**ignores a `CNAME` file in the artifact** — that shortcut only works for the older
+branch-based publishing. So the domain genuinely has to be set in settings.
+
+**Do this before submitting to App Review.** The privacy policy URL
+(`https://eficalculator.com/privacy.html`) is a required field, and Apple checks that it
+loads. Until the custom domain is switched on, that URL does not resolve.
+
+---
+
 ## Step 1 — Apple Developer Program — ✅ done
 
 Organization enrollment for **Plynth LLC** was approved **2026-08-19**, membership

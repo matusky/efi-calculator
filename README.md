@@ -101,19 +101,25 @@ the input space. It also pins two corrections made on 2026-08-20:
 The site auto-deploys to **GitHub Pages** on every push to `main` via the workflow in
 `.github/workflows/pages.yml`. No build step — it publishes the `www/` directory as-is.
 
-It serves from the custom domain **eficalculator.com**, set by `www/CNAME`. That is
-deliberate rather than cosmetic: **GitHub Pages URLs do not redirect when a repository
+It serves from the custom domain **eficalculator.com**. That is deliberate rather than
+cosmetic: **GitHub Pages URLs do not redirect when a repository
 is transferred** — the old one simply 404s. The privacy policy URL is a required field
 in App Store Connect and must keep resolving for the life of the listing, so the public
 URLs cannot be allowed to depend on which account owns the repo.
 
 Consequences worth knowing:
 
+- **The custom domain is a repository setting, not a file.** This site deploys through a
+  GitHub Actions workflow, and `actions/deploy-pages` **ignores a `CNAME` file in the
+  artifact** — that mechanism only applies to the older branch-based publishing. The
+  domain lives at Settings → Pages → Custom domain, and setting it needs admin on the
+  repo. `www/CNAME` is kept anyway: it costs nothing, documents the intent next to the
+  site, and would take over automatically if the publishing source ever changed to a
+  branch.
 - The apex `A`/`AAAA` records point at GitHub's shared Pages IPs, which are the same for
-  every account, so they survive a transfer untouched. The `CNAME` file travels with the
-  repo. Only two things need attention if the repo moves: re-confirm the custom domain in
-  the new owner's Pages settings, and repoint the `www` `CNAME` record, which is the one
-  record that names an owner.
+  every account, so they survive a transfer untouched. If the repo moves, two things need
+  attention: set the custom domain again in the new owner's Pages settings, and repoint
+  the `www` `CNAME` record, which is the one record that names an owner.
 - DNS is intentionally **not** proxied through Cloudflare. Proxying blocks GitHub from
   validating the domain and issuing its certificate, which breaks Enforce HTTPS.
 - The **support** URL still points at `github.com/matusky/efi-calculator`. That is safe —
