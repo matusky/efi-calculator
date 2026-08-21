@@ -1,0 +1,3 @@
+app_identifier "com.plynth.efi"
+# team_id and the App Store Connect API key come from env (GitHub Actions
+# secrets) — see ios/TESTFLIGHT.md. Nothing secret lives in this repo.
