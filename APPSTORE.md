@@ -28,7 +28,7 @@ These shipped with the app-feasibility branch; each just needs a glance before s
 - [x] **App artwork.** The icon and splash screens are the custom EFI wordmark (white Georgia "EFI" on navy `#1e2a35`), not Capacitor templates: `AppIcon.appiconset/AppIcon-512@2x.png` (1024×1024, no alpha) plus six `Splash.imageset/Default@{1,2,3}x~universal~anyany[-dark].png` (2732×2732, light and dark). Regeneration pipeline: `assets/source/generate.sh` → `npx capacitor-assets generate --ios` (needs macOS with Chrome + ImageMagick).
 - [x] **Privacy policy page.** `www/privacy.html` exists and states truthfully that nothing is collected, stored, or transmitted. The Pages workflow publishes `www/` as-is, so after the branch merges to `main` it is live at `https://matusky.github.io/efi-calculator/privacy.html` — confirm that URL loads before pasting it into App Store Connect.
 
-Optional, but it halves the screenshot work: if the iPad build isn't wanted for v1, set **TARGETED_DEVICE_FAMILY** to `1` (iPhone only) in Xcode → App target → Build Settings. Otherwise iPad screenshots are mandatory (see Step 8).
+**iPad stays in for v1** (decided 2026-08-20) — the worksheet is a two-column layout that earns the width. `TARGETED_DEVICE_FAMILY = "1,2"`, so both screenshot sets are mandatory; both are already generated and committed (see Step 8), so this costs nothing at submission time.
 
 ---
 
@@ -64,12 +64,33 @@ publishes to EU users is Plynth's registered address, not a home address.
    - **User access:** Full Access
 3. The Bundle ID dropdown only lists identifiers registered to your team. If `com.plynth.efi` isn't there, register it first at <https://developer.apple.com/account/resources/identifiers/list> → **+** → App IDs → App → Description `EFI Calculator`, Bundle ID (explicit) `com.plynth.efi`, no capabilities checked. Or let Xcode register it for you during Step 3 and come back.
 
-**Changing the bundle id is trivial right now, and impossible later.** Once an app record is created, its bundle id is permanent for that record. Before first submission, changing it takes two edits:
+### The bundle id is settled — there is nothing to change
+
+`com.plynth.efi`, decided 2026-08-20, and already in the repo: `capacitor.config.ts`
+and both build configurations of the Xcode target. It was verified in a built
+`Info.plist` and by launching on a simulator. Nothing here needs editing — just pick
+it from the dropdown in step 2 above.
+
+It reverse-DNSes to a domain Plynth LLC owns rather than to a personal one, which is
+the point of publishing under the entity. Apple does not require the bundle id to
+match the seller name; this is coherence, not a rule.
+
+**It becomes permanent the moment this app ships.** After that, changing it means
+publishing a *separate* app that loses the original's reviews, ratings and ranking
+history. So if it were ever going to change, it would have to be before first
+submission — and it is not going to change.
+
+<details>
+<summary>For a future app, changing an unshipped bundle id takes two edits</summary>
 
 1. `capacitor.config.ts` → `appId: 'your.new.id'`
-2. Xcode → App target → **Signing & Capabilities** → Bundle Identifier (this also writes `PRODUCT_BUNDLE_IDENTIFIER` in the project file; `cap sync` does **not** update it for you)
+2. Xcode → App target → **Signing & Capabilities** → Bundle Identifier — this also
+   writes `PRODUCT_BUNDLE_IDENTIFIER` into the project file, and `cap sync` does
+   **not** do it for you
 
-then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from the TS config on every sync, so don't hand-edit it. This was settled on 2026-08-20: `com.plynth.efi`, so that the identifier reverse-DNSes to a domain Plynth LLC owns rather than to a personal one. **Do not change it now** — it is already in the repo, and after first ship it is permanent.
+then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from the TS
+config on every sync, so never hand-edit it.
+</details>
 
 ---
 
@@ -79,7 +100,7 @@ then `npx cap sync ios`. `ios/App/App/capacitor.config.json` is generated from t
 2. Xcode → **Settings → Accounts → +** → Apple ID → sign in with the enrolled Apple ID. Your team appears once enrollment completes.
 3. Select the **App** target → **Signing & Capabilities** tab.
 4. Check **Automatically manage signing**, then pick your **Team** from the dropdown. The project already ships `CODE_SIGN_STYLE = Automatic`, so selecting the team is the only change; Xcode creates the development and distribution certificates and provisioning profiles for you.
-5. Confirm **Bundle Identifier** reads `com.plynth.efi` and the status area shows no red errors. "Failed to register bundle identifier" usually means someone else has claimed that id globally — change it per Step 2.
+5. Confirm **Bundle Identifier** reads `com.plynth.efi` and the status area shows no red errors. "Failed to register bundle identifier" means the id is claimed on another team — unlikely here, since `plynth.com` is Plynth's own domain. If it happens, it is almost certainly the dormant original-Plynth Apple ID rather than a stranger; open an Apple Developer support request to release it rather than quietly picking a different id.
 6. Plug in an iPhone, select it as the run destination, and **Run** (⌘R) once. Trust the developer certificate on the device when prompted (Settings → General → VPN & Device Management). Confirm the calculator loads and scores correctly, then put the phone in Airplane Mode and confirm it still works — that is the offline check, and it should pass because no asset is remote.
 
 ---
