@@ -210,8 +210,8 @@ platform :ios do
     end
 
     begin
-      groups = Spaceship::ConnectAPI::BetaGroup.all(app_id: app.id)
-      internal = groups.select(&:is_internal_group)
+      groups = app.get_beta_groups
+      internal = groups.select { |g| g.is_internal_group }
       if internal.empty?
         UI.important("No internal TestFlight group yet — that is what makes a build installable.")
       else
