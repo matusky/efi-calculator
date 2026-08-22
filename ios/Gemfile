@@ -1,3 +1,8 @@
 source "https://rubygems.org"
 
-gem "fastlane"
+# Pinned to a major so a fastlane 3 cannot land mid-release, while patch and
+# minor fixes still flow. Deliberately no committed Gemfile.lock: this Gemfile
+# is tools-only, and a lock written by a newer bundler than the runner's is
+# unreadable in frozen mode — CI pins Ruby 3.2, and a lock generated on a
+# machine running Ruby 4 fails with an empty-CHECKSUMS error.
+gem "fastlane", "~> 2.238"

@@ -183,3 +183,14 @@ To ship 1.0.1: bump `package.json`, update
 `ios/fastlane/metadata/en-US/release_notes.txt`, merge, then run the `release` lane.
 Do not hand-edit `MARKETING_VERSION` in the Xcode project; it is only a fallback for
 local dev builds.
+
+---
+
+## Why there is no Gemfile.lock
+
+`ios/Gemfile` pins fastlane to a major version and is deliberately not accompanied by
+a committed lock. A lock is written by whichever bundler ran last, and CI pins Ruby
+3.2 — so a lock generated on a machine running Ruby 4 carries a `CHECKSUMS` section
+that the runner's older bundler refuses to read in frozen mode, failing the build
+before anything useful happens. The version pin gives the reproducibility the lock
+would have, without the version skew. bin's iOS pipeline works the same way.
