@@ -99,10 +99,17 @@ reuses it.
 | `MATCH_PASSWORD` | a passphrase you choose — it encrypts the certs repo |
 | `MATCH_GIT_PAT` | the token from step 4 |
 
-> Paste `ASC_KEY_P8` as the whole multi-line file. A paste truncated at the first
-> newline leaves only the `-----BEGIN PRIVATE KEY-----` header and fails in a
-> confusing way — which is exactly the state this Mac's `apple-p8` keychain entry
-> is in.
+> **`ASC_KEY_P8` keeps its line breaks.** Paste the file exactly as it is — every
+> line, both the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`
+> markers included. A `.p8` is PEM, the newlines are part of the format, and
+> GitHub Actions secrets store multi-line values natively. Joining it onto one
+> line breaks it just as surely as truncating it does; the OpenSSL parser wants
+> the markers on their own lines.
+>
+> The workflow validates this before it builds, so a bad paste fails in seconds
+> with a message naming the problem, rather than twenty minutes later as an
+> opaque fastlane auth error. (A truncated paste leaving only the header line is
+> exactly the state this Mac's `apple-p8` keychain entry is in.)
 
 ---
 
