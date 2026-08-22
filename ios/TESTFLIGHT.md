@@ -79,7 +79,25 @@ and the **Issuer ID** shown on that page.
   fastlane `match` stores the distribution certificate and provisioning profile there,
   encrypted. It holds no source code.
 - Create a **fine-grained Personal Access Token** with **Contents: Read and write**,
-  scoped to `Plynth-Labs/efi-certs` only.
+  scoped to `Plynth-Labs/efi-certs` only. Resource owner must be **Plynth-Labs**, not a
+  personal account.
+
+  **Expiration: 366 days**, the maximum — not "No expiration".
+
+  The token writes to exactly one repo, and that repo holds only an *encrypted*
+  certificate and profile; the passphrase that opens them is `MATCH_PASSWORD`, kept
+  separately. A leaked PAT on its own is an unreadable blob, so a short lifetime buys
+  little. It costs plenty, though: releases here are infrequent, so a 30- or 90-day
+  token would be dead nearly every time you actually need to ship — and you would meet
+  that while pushing a fix.
+
+  An unbounded token is the other extreme: a write credential you forget you ever
+  issued. A year is the balance, and GitHub emails you before it lapses.
+
+  **When it does expire, it looks like a permissions bug, not an expiry.** The workflow
+  checks the certs repo before building and names the real cause — expired token,
+  pending org approval, or a personal resource owner — instead of letting `match` fail
+  on a bare 404. Note the renewal date somewhere you will see it.
 
 Why not automatic signing: it mints a fresh Apple Distribution certificate per
 machine, and Apple caps a team at a small number of them. On ephemeral CI runners
