@@ -45,10 +45,15 @@ def marketing_version
 end
 
 def asc_api_key
+  # CI normalizes whatever shape the secret was pasted in and leaves PEM at
+  # ASC_KEY_P8_PATH. Fall back to the raw env var for a local run.
+  path = ENV["ASC_KEY_P8_PATH"]
+  content = (path && File.exist?(path)) ? File.read(path) : ENV.fetch("ASC_KEY_P8")
+
   app_store_connect_api_key(
     key_id: ENV.fetch("ASC_KEY_ID"),
     issuer_id: ENV.fetch("ASC_ISSUER_ID"),
-    key_content: ENV.fetch("ASC_KEY_P8"),
+    key_content: content,
     is_key_content_base64: false,
     in_house: false
   )

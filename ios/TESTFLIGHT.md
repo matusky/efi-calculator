@@ -117,17 +117,19 @@ reuses it.
 | `MATCH_PASSWORD` | a passphrase you choose — it encrypts the certs repo |
 | `MATCH_GIT_PAT` | the token from step 4 |
 
-> **`ASC_KEY_P8` keeps its line breaks.** Paste the file exactly as it is — every
-> line, both the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`
-> markers included. A `.p8` is PEM, the newlines are part of the format, and
-> GitHub Actions secrets store multi-line values natively. Joining it onto one
-> line breaks it just as surely as truncating it does; the OpenSSL parser wants
-> the markers on their own lines.
+> **`ASC_KEY_P8`: just paste the whole file.** Open `AuthKey_XXXXXXXXXX.p8` in a text
+> editor, select all, paste. Keep the line breaks and both marker lines — a `.p8` is
+> PEM, the newlines are part of the format, and GitHub Actions stores multi-line
+> secrets natively.
 >
-> The workflow validates this before it builds, so a bad paste fails in seconds
-> with a message naming the problem, rather than twenty minutes later as an
-> opaque fastlane auth error. (A truncated paste leaving only the header line is
-> exactly the state this Mac's `apple-p8` keychain entry is in.)
+> If you get it wrong it is very likely still fine. CI normalizes the key before
+> using it and accepts every shape this tends to arrive in: raw PEM, base64 of the
+> whole file (what many CI guides tell you to do), the bare base64 body with the
+> markers stripped, or PEM flattened onto one line. Each is converted back to the
+> same key, and the step prints which shape it found. Only something that is not a
+> private key at all is rejected, with a message saying so.
+>
+> `scripts/normalize-asc-key.sh` does the work and can be run locally.
 
 ---
 
