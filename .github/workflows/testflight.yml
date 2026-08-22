@@ -57,6 +57,26 @@ jobs:
             exit 1
           fi
 
+      # A truncated or reflowed .p8 paste is the most likely setup mistake, and
+      # without this it surfaces 20 minutes in as an opaque fastlane auth error.
+      - name: Validate the App Store Connect key parses
+        run: |
+          printf '%s' "$ASC_KEY_P8" > /tmp/asc.p8
+          if ! grep -q -- '-----BEGIN PRIVATE KEY-----' /tmp/asc.p8; then
+            echo "::error::ASC_KEY_P8 has no BEGIN line. Paste the whole .p8 file."; exit 1
+          fi
+          if ! grep -q -- '-----END PRIVATE KEY-----' /tmp/asc.p8; then
+            echo "::error::ASC_KEY_P8 has no END line — the paste was cut short. Paste the whole file, all lines."; exit 1
+          fi
+          if [ "$(wc -l < /tmp/asc.p8)" -lt 3 ]; then
+            echo "::error::ASC_KEY_P8 is on too few lines. Keep the .p8's original line breaks; do not join it into one line."; exit 1
+          fi
+          if ! openssl pkey -in /tmp/asc.p8 -noout 2>/dev/null; then
+            echo "::error::ASC_KEY_P8 is not a valid private key. Re-download or regenerate it in App Store Connect."; exit 1
+          fi
+          rm -f /tmp/asc.p8
+          echo "App Store Connect key parses."
+
       - name: Configure match git auth
         env:
           MATCH_GIT_PAT: ${{ secrets.MATCH_GIT_PAT }}
