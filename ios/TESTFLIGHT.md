@@ -75,10 +75,11 @@ and the **Issuer ID** shown on that page.
 
 ### 4. Certs repo and a token for it
 
-- Create an empty **private** repo `matusky/efi-certs`. fastlane `match` stores the
-  distribution certificate and provisioning profile there, encrypted.
+- ~~Create an empty **private** repo~~ — **done**: `Plynth-Labs/efi-certs` already exists.
+  fastlane `match` stores the distribution certificate and provisioning profile there,
+  encrypted. It holds no source code.
 - Create a **fine-grained Personal Access Token** with **Contents: Read and write**,
-  scoped to `efi-certs` only.
+  scoped to `Plynth-Labs/efi-certs` only.
 
 Why not automatic signing: it mints a fresh Apple Distribution certificate per
 machine, and Apple caps a team at a small number of them. On ephemeral CI runners
