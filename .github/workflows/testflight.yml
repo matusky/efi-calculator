@@ -13,6 +13,7 @@ on:
         default: beta
         type: choice
         options:
+          - status         # read-only: is the build ready to install?
           - bootstrap      # create the App Store Connect record, nothing else
           - beta           # build + upload to TestFlight
           - metadata_only  # push metadata and screenshots, no build
