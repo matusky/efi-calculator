@@ -88,7 +88,7 @@ reuses it.
 
 ### 5. Repo secrets
 
-`matusky/efi-calculator` → Settings → Secrets and variables → Actions:
+`Plynth-Labs/efi-calculator` → Settings → Secrets and variables → Actions:
 
 | Secret | Value |
 |---|---|
