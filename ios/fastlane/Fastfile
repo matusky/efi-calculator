@@ -166,6 +166,62 @@ platform :ios do
     )
   end
 
+  # Read-only. Answers "is the build ready to install yet?" without anyone
+  # having to interpret a silent App Store Connect screen.
+  desc "Report app, build and TestFlight state"
+  lane :status do
+    require "spaceship"
+
+    path = ENV["ASC_KEY_P8_PATH"]
+    key = (path && File.exist?(path)) ? File.read(path) : ENV.fetch("ASC_KEY_P8")
+    Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.create(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key: key
+    )
+
+    app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
+    UI.user_error!("No app record for #{APP_IDENTIFIER} — run the bootstrap lane first.") if app.nil?
+    UI.success("App: #{app.name} (#{APP_IDENTIFIER}) id=#{app.id}")
+
+    builds = begin
+      Spaceship::ConnectAPI::Build.all(app_id: app.id, sort: "-version", limit: 5)
+    rescue => e
+      UI.important("Could not list builds: #{e.message}")
+      []
+    end
+
+    if builds.empty?
+      UI.important("No builds yet. Run the beta lane.")
+    else
+      UI.message("Builds, newest first:")
+      builds.each do |b|
+        state = b.processing_state
+        note =
+          case state
+          when "VALID"      then "ready to install from TestFlight"
+          when "PROCESSING" then "still processing — usually 5-15 min"
+          when "FAILED"     then "processing FAILED — check email from Apple"
+          when "INVALID"    then "INVALID — rejected during processing"
+          else state
+          end
+        UI.message("  #{b.app_version} (#{b.version})  #{state}  — #{note}")
+      end
+    end
+
+    begin
+      groups = Spaceship::ConnectAPI::BetaGroup.all(app_id: app.id)
+      internal = groups.select(&:is_internal_group)
+      if internal.empty?
+        UI.important("No internal TestFlight group yet — that is what makes a build installable.")
+      else
+        internal.each { |g| UI.success("Internal group: #{g.name}") }
+      end
+    rescue => e
+      UI.important("Could not read TestFlight groups: #{e.message}")
+    end
+  end
+
   # Push metadata and screenshots without building or submitting. Useful for a
   # description or screenshot fix between releases.
   desc "Update App Store metadata and screenshots only"
