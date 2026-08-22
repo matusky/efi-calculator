@@ -84,6 +84,24 @@ jobs:
           AUTH=$(printf '%s' "merit-blake:$MATCH_GIT_PAT" | base64 | tr -d '\n')
           echo "MATCH_GIT_BASIC_AUTHORIZATION=$AUTH" >> "$GITHUB_ENV"
 
+      # An expired or unapproved PAT reaches match as a bare 404 on the certs
+      # repo, which reads like a permissions bug rather than a dead credential.
+      # Name the actual cause here instead.
+      - name: Check the certs repo is reachable
+        env:
+          MATCH_GIT_PAT: ${{ secrets.MATCH_GIT_PAT }}
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $MATCH_GIT_PAT" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/Plynth-Labs/efi-certs)
+          case "$code" in
+            200) echo "Certs repo reachable." ;;
+            401) echo "::error::MATCH_GIT_PAT was rejected (401). The token has most likely EXPIRED — fine-grained tokens last at most 366 days. Generate a new one and update the secret."; exit 1 ;;
+            404) echo "::error::Cannot see Plynth-Labs/efi-certs (404). Usually one of: MATCH_GIT_PAT expired; the token is still PENDING ORG APPROVAL under Plynth-Labs settings; or its resource owner is a personal account rather than Plynth-Labs."; exit 1 ;;
+            *)   echo "::error::Unexpected $code checking Plynth-Labs/efi-certs with MATCH_GIT_PAT."; exit 1 ;;
+          esac
+
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
