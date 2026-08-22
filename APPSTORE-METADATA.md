@@ -81,7 +81,7 @@ endometriosis,fertility,rASRM,AFS,infertility,laparoscopy,gynecology,OBGYN,IVF,a
 
 | Field | Value |
 |---|---|
-| Support URL | `https://github.com/matusky/efi-calculator` |
+| Support URL | `https://github.com/Plynth-Labs/efi-calculator` |
 | Marketing URL | `https://eficalculator.com` |
 | Privacy policy URL | `https://eficalculator.com/privacy.html` |
 

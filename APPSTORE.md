@@ -204,7 +204,7 @@ All of this goes in App Store Connect → your app → the **1.0 Prepare for Sub
 | Promotional text | 170 | Editable without a new build — good place for updates |
 | Description | 4000 | What it computes, the four steps (rASRM score → LF score → historical factors → EFI summary), the citation, and the disclaimer verbatim |
 | Keywords | 100 total, comma-separated, no spaces | e.g. `EFI,endometriosis,fertility,rASRM,AFS,infertility,IVF,laparoscopy,gynecology,OBGYN` |
-| Support URL | required | `https://github.com/matusky/efi-calculator` or the Pages site |
+| Support URL | required | `https://github.com/Plynth-Labs/efi-calculator` or the Pages site |
 | Marketing URL | optional | `https://eficalculator.com` |
 | Privacy policy URL | required | The page from Step 0 |
 | Category | — | Primary **Medical**; secondary **Reference** if you want one |

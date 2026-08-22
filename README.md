@@ -63,7 +63,7 @@ The whole calculator is one HTML file — `www/index.html` — with no build ste
 
 ```bash
 # Clone the repo
-git clone https://github.com/matusky/efi-calculator.git
+git clone https://github.com/Plynth-Labs/efi-calculator.git
 
 # Open it
 open efi-calculator/www/index.html
@@ -117,12 +117,14 @@ Consequences worth knowing:
   site, and would take over automatically if the publishing source ever changed to a
   branch.
 - The apex `A`/`AAAA` records point at GitHub's shared Pages IPs, which are the same for
-  every account, so they survive a transfer untouched. If the repo moves, two things need
-  attention: set the custom domain again in the new owner's Pages settings, and repoint
-  the `www` `CNAME` record, which is the one record that names an owner.
+  every account, so they survived the move from `matusky` to `Plynth-Labs` untouched. Only
+  two things needed doing: setting the custom domain again in the new org's Pages settings,
+  and repointing the `www` `CNAME` record, which is the one record naming an owner. That is
+  the whole cost of an org transfer once the site is on its own domain — which is why it
+  was worth doing before submitting anything to Apple.
 - DNS is intentionally **not** proxied through Cloudflare. Proxying blocks GitHub from
   validating the domain and issuing its certificate, which breaks Enforce HTTPS.
-- The **support** URL still points at `github.com/matusky/efi-calculator`. That is safe —
+- The **support** URL still points at `github.com/Plynth-Labs/efi-calculator`. That is safe —
   GitHub *repository* URLs do redirect after a transfer. Only Pages URLs do not.
 
 ## iOS App
